@@ -9,6 +9,9 @@ public final class Constants {
     public static final class ControllerConstants {
         public static final int DRIVE_CONTROLLER = 0;
         public static final int OPERATOR_CONTROLLER = 1;
+        public static final int LEFT_X_AXIS = 0;
+        public static final int LEFT_Y_AXIS = 1;
+        public static final int RIGHT_X_AXIS = 2;
     }
     //swerve drive constants
     public static final double L = 0.56515; //length between axles

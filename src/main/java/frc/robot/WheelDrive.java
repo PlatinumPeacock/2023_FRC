@@ -7,6 +7,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
+
 import com.ctre.phoenix.sensors.Pigeon2;
 import edu.wpi.first.math.controller.PIDController;
 
@@ -14,7 +15,7 @@ import edu.wpi.first.math.controller.PIDController;
 public class WheelDrive {
     private CANSparkMax angleMotor;
     private CANSparkMax speedMotor;
-    private PIDController pidController;
+    //private PIDController pidController;
 
     public WheelDrive(int aM, int sM, int encoder) {
         angleMotor = new CANSparkMax(aM, MotorType.kBrushless);
@@ -34,7 +35,6 @@ public class WheelDrive {
         setpoint = setpoint - Constants.MAX_VOLTS;
     }
 
-    pidController.setSetpoint (setpoint);
 
     }
 }
