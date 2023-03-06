@@ -6,6 +6,9 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants.DriveConstants;
+import frc.robot.subsystems.SwerveDrive;
+import frc.robot.subsystems.WheelDrive;
+import frc.robot.commands.DriveWithJoysticksTrial;
 
 public class RobotContainer {
     
@@ -19,8 +22,8 @@ public class RobotContainer {
     public static final SwerveDrive swerveDrive = new SwerveDrive (backRight, backLeft, frontRight, frontLeft);
     
     public RobotContainer() {
-        
-
+        DriveWithJoysticksTrial dtt = new DriveWithJoysticksTrial(swerveDrive);
+        swerveDrive.setDefaultCommand(dtt);
 
         //robotDrive.setDefaultCommand(drive());
         configureButtonBindings();

@@ -1,6 +1,11 @@
-package frc.robot;
+package frc.robot.subsystems;
 
-public class SwerveDrive {
+import frc.robot.Constants;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
+
+public class SwerveDrive extends SubsystemBase {
     private WheelDrive backRight;
     private WheelDrive backLeft;
     private WheelDrive frontRight;
@@ -13,7 +18,13 @@ public class SwerveDrive {
         this.frontLeft = frontLeft;
     }
 
-    public void drive (double x1, double y1, double x2) {
+    public void drive () {
+        XboxController driver = RobotContainer.driverController;
+        double x1 = driver.getRawAxis(Constants.ControllerConstants.LEFT_X_AXIS);
+        double y1 = driver.getRawAxis(Constants.ControllerConstants.LEFT_Y_AXIS);
+        double x2 = driver.getRawAxis(Constants.ControllerConstants.RIGHT_X_AXIS);
+       
+       
         double r = Math.sqrt((Constants.L * Constants.L) + (Constants.W * Constants.W));
         y1 *= -1;
 
@@ -27,14 +38,19 @@ public class SwerveDrive {
         double frontRightSpeed = Math.sqrt ((b * b) + (d * d));
         double frontLeftSpeed = Math.sqrt ((b * b) + (c * c));
 
-        double backRightAngle = Math.atan2 (a, d) / Math.PI;
-        double backLeftAngle = Math.atan2 (a, c) / Math.PI;
-        double frontRightAngle = Math.atan2 (b, d) / Math.PI;
-        double frontLeftAngle = Math.atan2 (b, c) / Math.PI;
+        double backRightAngle = Math.atan2 (a, d) * 180/ Math.PI;
+        double backLeftAngle = Math.atan2 (a, c) * 180/ Math.PI;
+        double frontRightAngle = Math.atan2 (b, d) * 180/ Math.PI;
+        double frontLeftAngle = Math.atan2 (b, c) * 180/ Math.PI;
 
         backRight.drive (backRightSpeed, backRightAngle);
         backLeft.drive (backLeftSpeed, backLeftAngle);
         frontRight.drive (frontRightSpeed, frontRightAngle);
         frontLeft.drive (frontLeftSpeed, frontLeftAngle);
+    }
+
+    @Override
+    public void periodic() {
+      // This method will be called once per scheduler run
     }
 }
