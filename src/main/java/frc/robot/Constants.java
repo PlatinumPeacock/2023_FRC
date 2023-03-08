@@ -18,8 +18,25 @@ public final class Constants {
     public static final double W = 0.56515; //width between axles
     public static final int PIGEON_ID = 2;
     public static final double MAX_VOLTS = 8;
-    
+
     public static final class DriveConstants {
+        // Driving Parameters - Note that these are not the maximum capable speeds of
+        // the robot, rather the allowed maximum speeds
+        public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second
+    
+        public static final double kDirectionSlewRate = 1.2; // radians per second
+        public static final double kMagnitudeSlewRate = 1.8; // percent per second (1 = 100%)
+        public static final double kRotationalSlewRate = 2.0; // percent per second (1 = 100%)
+    
+    
+        // Angular offsets of the modules relative to the chassis in radians
+        public static final double kFrontLeftChassisAngularOffset = -Math.PI / 2;
+        public static final double kFrontRightChassisAngularOffset = 0;
+        public static final double kBackLeftChassisAngularOffset = Math.PI;
+        public static final double kBackRightChassisAngularOffset = Math.PI / 2;
+    
+
+        //old constants
         //motor and encoder ports
         public static final int FRONT_LEFT_DRIVE = 16;
         public static final int REAR_LEFT_DRIVE = 15;
@@ -35,7 +52,7 @@ public final class Constants {
         public static final int REAR_LEFT_ENCODER = 4;
         public static final int FRONT_RIGHT_ENCODER = 6;
         public static final int REAR_RIGHT_ENCODER = 3;
-    /* 
+    
         public static final double kFrontLeftAngleZero = 79.45;
         public static final double kRearLeftAngleZero = 121.38;
         public static final double kFrontRightAngleZero = -104.68;
@@ -112,6 +129,6 @@ public final class Constants {
         public static final double kDrivetoMetersPerSecond =
             (10 * kWheelCircumferenceMeters) / (kDriveGearRatio * 2048);
       
-      */
+     
     }
 }
