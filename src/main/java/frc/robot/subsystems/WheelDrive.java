@@ -5,7 +5,6 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import frc.robot.Constants;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 
 import com.ctre.phoenix.sensors.CANCoder;
 
@@ -21,9 +20,9 @@ public class WheelDrive {
         speedMotor = new CANSparkMax(sM, MotorType.kBrushless);
         this.encoder = new CANCoder(encoder);
         
-        pidController = new PIDController (0.1, 0, 0);
+        pidController = new PIDController (0.001, 0, 0.0000001);
         pidController.enableContinuousInput(-180, 180);
-        pidController.setTolerance(10);
+        pidController.setTolerance(1);
 
     }
 
@@ -33,31 +32,13 @@ public class WheelDrive {
          
         
         double setpoint = angle;
-        
-        /*
-        setpoint = angle * (Constants.MAX_VOLTS * 0.5) + (Constants.MAX_VOLTS * 0.5); // Optimization offset can be calculated here.
-    if (setpoint < 0) {
-        setpoint = Constants.MAX_VOLTS + setpoint;
-    }
-    if (setpoint > Constants.MAX_VOLTS) {
-        setpoint = setpoint - Constants.MAX_VOLTS;
-    }
-    */
+        pidController.setSetpoint (setpoint);
     
-
-
-    //pidController.setTolerance(0.02);
-    pidController.setSetpoint (setpoint);
-    
-    if (!pidController.atSetpoint()) {
-        //angleMotor.set(0.1 * pidController.calculate((encoder.getPosition() / 4096) * 360, setpoint));
-        //angleMotor.set(0.1 * pidController.calculate(encoder.getPosition(), setpoint));
-    }
-    System.out.println((0.1 * pidController.calculate(encoder.getPosition(), setpoint)));
-    //angleMotor.setVoltage(feedforward.calculate);
-
-   //setpoint = encoder.getAbsolutePosition() - angle;
-   //pidController.calculate(setpoint);
-    //System.out.println(pidController.calculate((encoder.getPosition() / 4096) * 180, setpoint));
+        if (!pidController.atSetpoint()) {
+            angleMotor.set(MathUtil.clamp(pidController.calculate(encoder.getAbsolutePosition(), setpoint), -1, 1));
+        } else {
+            angleMotor.set(0);
+        }
+        System.out.println(pidController.getPositionError());
     }
 }

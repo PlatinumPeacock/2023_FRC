@@ -11,7 +11,7 @@ public final class Constants {
         public static final int OPERATOR_CONTROLLER = 1;
         public static final int LEFT_X_AXIS = 0;
         public static final int LEFT_Y_AXIS = 1;
-        public static final int RIGHT_X_AXIS = 2;
+        public static final int RIGHT_X_AXIS = 4;
     }
     //swerve drive constants
     public static final double L = 0.56515; //length between axles
@@ -52,6 +52,8 @@ public final class Constants {
         public static final int REAR_LEFT_ENCODER = 4;
         public static final int FRONT_RIGHT_ENCODER = 6;
         public static final int REAR_RIGHT_ENCODER = 3;
+
+        public static final int PIGEON2 = 2;
     
         public static final double kFrontLeftAngleZero = 79.45;
         public static final double kRearLeftAngleZero = 121.38;
