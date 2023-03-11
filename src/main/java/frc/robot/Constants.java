@@ -18,6 +18,7 @@ public final class Constants {
         //port numbers for elevator motors
         public static final int ROTATE_ELEVATOR = 3;
         public static final int EXTEND_ELEVATOR = 4;
+        //elevator motor speeds
         public static final double ROTATE_SPEED = 0.5;
         public static final double EXTEND_SPEED = 0.5;
         }
