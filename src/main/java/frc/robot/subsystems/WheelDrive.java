@@ -20,7 +20,7 @@ public class WheelDrive {
         speedMotor = new CANSparkMax(sM, MotorType.kBrushless);
         this.encoder = new CANCoder(encoder);
         
-        pidController = new PIDController (0.001, 0, 0.0000001);
+        pidController = new PIDController (0.005, 0, 0);
         pidController.enableContinuousInput(-180, 180);
         pidController.setTolerance(1);
 
@@ -33,12 +33,19 @@ public class WheelDrive {
         
         double setpoint = angle;
         pidController.setSetpoint (setpoint);
-    
+        double cmd = -1 * pidController.calculate(encoder.getAbsolutePosition(), setpoint);
+        //double kp = 0.005;
+        //double cmd = -1 * ((setpoint - encoder.getAbsolutePosition()) * kp);
+        
+       
+        angleMotor.set(MathUtil.clamp(cmd, -1, 1));
+    /* 
         if (!pidController.atSetpoint()) {
-            angleMotor.set(MathUtil.clamp(pidController.calculate(encoder.getAbsolutePosition(), setpoint), -1, 1));
-        } else {
+            
+        } 
+        else {
             angleMotor.set(0);
-        }
-        System.out.println(pidController.getPositionError());
+        }*/
+        
     }
 }

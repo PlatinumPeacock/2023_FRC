@@ -13,6 +13,16 @@ public final class Constants {
         public static final int LEFT_Y_AXIS = 1;
         public static final int RIGHT_X_AXIS = 4;
     }
+
+    public static final class ElevatorConstants {
+        //port numbers for elevator motors
+        public static final int ROTATE_ELEVATOR = 3;
+        public static final int EXTEND_ELEVATOR = 4;
+        public static final double ROTATE_SPEED = 0.5;
+        public static final double EXTEND_SPEED = 0.5;
+        }
+
+
     //swerve drive constants
     public static final double L = 0.56515; //length between axles
     public static final double W = 0.56515; //width between axles

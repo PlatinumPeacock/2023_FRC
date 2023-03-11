@@ -23,22 +23,32 @@ public class SwerveDrive extends SubsystemBase {
 
     public void drive () {
         XboxController driver = RobotContainer.driverController;
-        double x1 = (int)(driver.getRawAxis(Constants.ControllerConstants.LEFT_X_AXIS) * 100) / 100;
-        double y1 = (int)(driver.getRawAxis(Constants.ControllerConstants.LEFT_Y_AXIS) * 100) / 100;
-        double x2 = (int)(driver.getRawAxis(Constants.ControllerConstants.RIGHT_X_AXIS) * 100) / 100;
+        double x1 = driver.getRawAxis(Constants.ControllerConstants.LEFT_X_AXIS);
+        double y1 = driver.getRawAxis(Constants.ControllerConstants.LEFT_Y_AXIS);
+        double x2 = driver.getRawAxis(Constants.ControllerConstants.RIGHT_X_AXIS);
 
-       x1 = 0;
-       x2 = 0;
-       y1 = 0;
+        if (x1 < 0.05 && x1 > -0.05) {
+            x1 = 0;
+        }
+        if (x2 < 0.05 && x2 > -0.05) {
+            x2 = 0;
+        }
+        if (y1 < 0.05 && y1 > -0.05) {
+            y1 = 0;
+        }
+
        
         double r = Math.sqrt((Constants.L * Constants.L) + (Constants.W * Constants.W));
         y1 *= -1;
+        x2 *= -1;
 
-        double theta = pigeon2.getYaw();
+        int yawOffset = 93;
+
+        double theta = pigeon2.getYaw() + yawOffset;
 
         double temp = y1 * Math.cos(theta) + x1 * Math.sin(theta);
-        x1 = -y1 * Math.sin(theta) + x1 * Math.cos(theta);
-        y1 = temp;
+        //x1 = -y1 * Math.sin(theta) + x1 * Math.cos(theta);
+        //y1 = temp;
 
         double a = x1 - x2 * (Constants.L / r);
         double b = x1 + x2 * (Constants.L / r);
@@ -50,14 +60,14 @@ public class SwerveDrive extends SubsystemBase {
         double frontRightSpeed = Math.sqrt ((b * b) + (d * d));
         double frontLeftSpeed = Math.sqrt ((b * b) + (c * c));
 
-        double backRightAngle = Math.atan2 (a, d) * 180/ Math.PI;
-        double backLeftAngle = Math.atan2 (a, c) * 180/ Math.PI;
-        double frontRightAngle = Math.atan2 (b, d) * 180/ Math.PI;
-        double frontLeftAngle = Math.atan2 (b, c) * 180/ Math.PI;
+        double backRightAngle = Math.atan2 (d, a) * 180/ Math.PI;
+        double backLeftAngle = Math.atan2 (c, a) * 180/ Math.PI;
+        double frontRightAngle = Math.atan2 (d, b) * 180/ Math.PI;
+        double frontLeftAngle = Math.atan2 (c, b) * 180/ Math.PI;
 
-        //backRight.drive (backRightSpeed, backRightAngle);
-        //backLeft.drive (backLeftSpeed, backLeftAngle);
-        //frontRight.drive (frontRightSpeed, frontRightAngle);
+        backRight.drive (-backRightSpeed, backRightAngle);
+        backLeft.drive (backLeftSpeed, backLeftAngle);
+        frontRight.drive (-frontRightSpeed, frontRightAngle);
         frontLeft.drive (frontLeftSpeed, frontLeftAngle);
     }
 
