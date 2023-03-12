@@ -40,15 +40,16 @@ public class SwerveDrive extends SubsystemBase {
        
         double r = Math.sqrt((Constants.L * Constants.L) + (Constants.W * Constants.W));
         y1 *= -1;
-        x2 *= -1;
+        //x2 *= -1;
 
-        int yawOffset = 93;
+        int yawOffset = 3;
 
         double theta = pigeon2.getYaw() + yawOffset;
+        theta = theta*Math.PI/180;
 
         double temp = y1 * Math.cos(theta) + x1 * Math.sin(theta);
-        //x1 = -y1 * Math.sin(theta) + x1 * Math.cos(theta);
-        //y1 = temp;
+        x1 = -y1 * Math.sin(theta) + x1 * Math.cos(theta);
+        y1 = temp;
 
         double a = x1 - x2 * (Constants.L / r);
         double b = x1 + x2 * (Constants.L / r);
@@ -65,10 +66,10 @@ public class SwerveDrive extends SubsystemBase {
         double frontRightAngle = Math.atan2 (d, b) * 180/ Math.PI;
         double frontLeftAngle = Math.atan2 (c, b) * 180/ Math.PI;
 
-        backRight.drive (-backRightSpeed, backRightAngle);
-        backLeft.drive (backLeftSpeed, backLeftAngle);
-        frontRight.drive (-frontRightSpeed, frontRightAngle);
-        frontLeft.drive (frontLeftSpeed, frontLeftAngle);
+        backRight.drive (backRightSpeed, backRightAngle);
+        backLeft.drive (-backLeftSpeed, backLeftAngle);
+        frontRight.drive (frontRightSpeed, frontRightAngle);
+        frontLeft.drive (-frontLeftSpeed, frontLeftAngle);
     }
 
     @Override
