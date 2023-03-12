@@ -5,6 +5,7 @@ import com.ctre.phoenix.sensors.WPI_Pigeon2;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.DriveConstants;
@@ -33,32 +34,47 @@ public class RobotContainer {
     //create swerve drive
     public static final SwerveDrive swerveDrive = new SwerveDrive (backRight, backLeft, frontRight, frontLeft, pigeon2);
 
+    //create all motors
     private final Elevator elevator;
+
+    //create all repeatCommands (because the whileHeld() method no longer exists)
+    private final RepeatCommand rotateForward;
+    private final RepeatCommand rotateBackward;
+    private final RepeatCommand extendOut;
+    private final RepeatCommand extendIn;
     
     public RobotContainer() {
 
+        //new drive object and teleop drive command
         DriveWithJoysticksTrial dtt = new DriveWithJoysticksTrial(swerveDrive);
         swerveDrive.setDefaultCommand(dtt);
 
+        //new elevator object and all elevator commands
         elevator = new Elevator();
+        rotateForward = new RepeatCommand(new Rotate(elevator, 1));
+        rotateBackward = new RepeatCommand(new Rotate(elevator, -1));
+        extendOut = new RepeatCommand(new Extend(elevator, 1));
+        extendIn =  new RepeatCommand(new Extend(elevator, -1));
+
 
         //robotDrive.setDefaultCommand(drive());
         configureButtonBindings();
     }
 
     private void configureButtonBindings() { 
+        
         //elevator buttons
-        JoystickButton rotateForward = new JoystickButton(operatorController, XboxController.Button.kRightBumper.value);
-        rotateForward.whileTrue(new Rotate(elevator, 1));
+        JoystickButton rotateForwardButton = new JoystickButton(operatorController, XboxController.Button.kRightBumper.value);
+        rotateForwardButton.whileTrue(rotateForward);
 
-        JoystickButton rotateBackward = new JoystickButton(operatorController, XboxController.Button.kLeftBumper.value);
-        rotateBackward.whileTrue(new Rotate(elevator, -1));
+        JoystickButton rotateBackwardButton = new JoystickButton(operatorController, XboxController.Button.kLeftBumper.value);
+        rotateBackwardButton.whileTrue(rotateBackward);
 
-        JoystickButton extendOut = new JoystickButton(operatorController, XboxController.Button.kY.value);
-        extendOut.whileTrue(new Extend(elevator, -1));
+        JoystickButton extendOutButton = new JoystickButton(operatorController, XboxController.Button.kY.value);
+        extendOutButton.whileTrue(extendOut);
 
-        JoystickButton extendIn = new JoystickButton(operatorController, XboxController.Button.kX.value);
-        extendIn.whileTrue(new Extend(elevator, -1));
+        JoystickButton extendInButton = new JoystickButton(operatorController, XboxController.Button.kX.value);
+        extendInButton.whileTrue(extendIn);
 
     }
 
