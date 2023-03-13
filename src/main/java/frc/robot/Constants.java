@@ -1,9 +1,4 @@
 package frc.robot;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
 
 public final class Constants {
     public static final class ControllerConstants {
@@ -47,19 +42,21 @@ public final class Constants {
     public static final class DriveConstants {
         // Driving Parameters - Note that these are not the maximum capable speeds of
         // the robot, rather the allowed maximum speeds
-        public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second
-    
+        //public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second
+        
+        /* 
         public static final double kDirectionSlewRate = 1.2; // radians per second
         public static final double kMagnitudeSlewRate = 1.8; // percent per second (1 = 100%)
         public static final double kRotationalSlewRate = 2.0; // percent per second (1 = 100%)
-    
+        */
     
         // Angular offsets of the modules relative to the chassis in radians
+        /* 
         public static final double kFrontLeftChassisAngularOffset = -Math.PI / 2;
         public static final double kFrontRightChassisAngularOffset = 0;
         public static final double kBackLeftChassisAngularOffset = Math.PI;
         public static final double kBackRightChassisAngularOffset = Math.PI / 2;
-    
+        */
 
         //old constants
         //motor and encoder ports
@@ -85,20 +82,13 @@ public final class Constants {
         public static final double kFrontRightAngleZero = -104.68;
         public static final double kRearRightAngleZero = 23.54;
     
-        public static final boolean kFrontLeftTurningEncoderReversed = false;
-        public static final boolean kRearLeftTurningEncoderReversed = false;
-        public static final boolean kFrontRightTurningEncoderReversed = false;
-        public static final boolean kRearRightTurningEncoderReversed = false;
-    
-        public static final boolean kFrontLeftDriveEncoderReversed = false;
-        public static final boolean kRearLeftDriveEncoderReversed = false;
-        public static final boolean kFrontRightDriveEncoderReversed = true;
-        public static final boolean kRearRightDriveEncoderReversed = true;
     
         public static final double kTrackWidth = 0.56515;
         // Distance between centers of right and left wheels on robot
         public static final double kWheelBase = 0.56515;
         // Distance between front and back wheels on robot
+
+        /* 
         public static final SwerveDriveKinematics kDriveKinematics =
             new SwerveDriveKinematics(
                 new Translation2d(kWheelBase / 2, kTrackWidth / 2),
@@ -107,17 +97,20 @@ public final class Constants {
                 new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
     
         public static final boolean kGyroReversed = false;
+        */
     
     
         // Values to scale joystick inputs to desired states.
+        /* 
         public static final double kMaxSpeedMetersPerSecond = 4.5; // LOCKED IN
         public static final double kMaxRotationalSpeed =
             3 * Math.PI;
-    
+        */
         // These are example values only - DO NOT USE THESE FOR YOUR OWN ROBOT!
         // These characterization values MUST be determined either experimentally or theoretically
         // for *your* robot's drive.
         // The SysId tool provides a convenient method for obtaining these values for your robot.
+        /*
         public static final double ksVolts = 0.73394;
         public static final double kvVoltSecondsPerMeter = 2.4068;
         public static final double kaVoltSecondsSquaredPerMeter = 0.28749;
@@ -126,8 +119,9 @@ public final class Constants {
         public static final double kvTurning = 0.75; //0.75 // 3.0052
         public static final double kaTurning = 0; // Default to zero
         public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI * 2;
+        */
       }
-
+      /* 
       public static final class ModuleConstants {
 
         public static final double kDriveGearRatio = 7.13;
@@ -158,4 +152,5 @@ public final class Constants {
       
      
     }
+    */
 }

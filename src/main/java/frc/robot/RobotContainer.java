@@ -9,12 +9,15 @@ import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.SwerveDrive;
 import frc.robot.subsystems.WheelDrive;
-import main.java.frc.robot.subsystems.Solenoids;
+import frc.robot.subsystems.Solenoids;
 import frc.robot.commands.DriveWithJoysticksTrial;
 import frc.robot.commands.Extend;
+import frc.robot.commands.Intake;
+import frc.robot.commands.Pneumatics;
 import frc.robot.commands.Rotate;
 
 
@@ -75,7 +78,7 @@ public class RobotContainer {
     }
 
     private void configureButtonBindings() { 
-        
+
         //elevator buttons
         JoystickButton rotateForwardButton = new JoystickButton(operatorController, XboxController.Button.kRightBumper.value);
         rotateForwardButton.whileTrue(rotateForward);
@@ -83,7 +86,7 @@ public class RobotContainer {
         JoystickButton rotateBackwardButton = new JoystickButton(operatorController, XboxController.Button.kLeftBumper.value);
         rotateBackwardButton.whileTrue(rotateBackward);
 
-        JoystickButton extendOutButton = new JoystickButton(operatorController, XboxController.Button.kY);
+        JoystickButton extendOutButton = new JoystickButton(operatorController, XboxController.Button.kY.value);
         extendOutButton.whileTrue(extendOut);
 
         JoystickButton extendInButton = new JoystickButton(operatorController, XboxController.Button.kX.value);
@@ -99,10 +102,10 @@ public class RobotContainer {
 
         //pneumatics buttons
         JoystickButton cubeButton = new JoystickButton(operatorController, XboxController.Button.kBack.value);
-        cubeButton.whenPressed(new Pneumatics(clawPneumatics, false));
+        cubeButton.onTrue(new Pneumatics(clawPneumatics, false));
 
         JoystickButton coneButton = new JoystickButton(operatorController, XboxController.Button.kStart.value);
-        cubeButton.whenPressed(new Pneumatics(clawPneumatics, true));
+        cubeButton.onTrue(new Pneumatics(clawPneumatics, true));
     }
 
     public void teleopInitFunc() {
