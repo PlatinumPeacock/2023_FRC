@@ -39,10 +39,10 @@ public class SwerveDrive extends SubsystemBase {
 
        
         double r = Math.sqrt((Constants.L * Constants.L) + (Constants.W * Constants.W));
-        y1 *= -1;
+        //y1 *= -1;
         //x2 *= -1;
 
-        int yawOffset = 3;
+        int yawOffset = -87;
 
         double theta = pigeon2.getYaw() + yawOffset;
         theta = theta*Math.PI/180;
@@ -56,20 +56,23 @@ public class SwerveDrive extends SubsystemBase {
         double c = y1 - x2 * (Constants.W / r);
         double d = y1 + x2 * (Constants.W / r);
 
-        double backRightSpeed = Math.sqrt ((a * a) + (d * d));
-        double backLeftSpeed = Math.sqrt ((a * a) + (c * c));
-        double frontRightSpeed = Math.sqrt ((b * b) + (d * d));
-        double frontLeftSpeed = Math.sqrt ((b * b) + (c * c));
+        double frontRightSpeed = Math.sqrt ((a * a) + (c * c));
+        double backLeftSpeed = Math.sqrt ((a * a) + (d * d));
+        double backRightSpeed = Math.sqrt ((b * b) + (c * c));
+        double frontLeftSpeed = Math.sqrt ((b * b) + (d * d));
 
-        double backRightAngle = Math.atan2 (d, a) * 180/ Math.PI;
-        double backLeftAngle = Math.atan2 (c, a) * 180/ Math.PI;
-        double frontRightAngle = Math.atan2 (d, b) * 180/ Math.PI;
-        double frontLeftAngle = Math.atan2 (c, b) * 180/ Math.PI;
+        double frontRightAngle = Math.atan2 (a, c) * 180/ Math.PI ; //arctan(+1) = 45 -45
+        double backLeftAngle = Math.atan2 (a, d) * 180/ Math.PI; //arctan(-1) = -45 45
+        double backRightAngle = Math.atan2 (b, c) * 180/ Math.PI; //arctan(+1) = 45 135
+        double frontLeftAngle = Math.atan2 (b, d) * 180/ Math.PI; //arctan(-1) = -45 -135
 
-        backRight.drive (backRightSpeed, backRightAngle);
-        backLeft.drive (-backLeftSpeed, backLeftAngle);
+
         frontRight.drive (frontRightSpeed, frontRightAngle);
-        frontLeft.drive (-frontLeftSpeed, frontLeftAngle);
+        frontLeft.drive (backLeftSpeed, backLeftAngle);
+        backRight.drive (backRightSpeed, backRightAngle);
+        backLeft.drive (frontLeftSpeed, frontLeftAngle);
+    
+    
     }
 
     @Override
