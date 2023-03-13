@@ -21,7 +21,21 @@ public final class Constants {
         //elevator motor speeds
         public static final double ROTATE_SPEED = 0.5;
         public static final double EXTEND_SPEED = 0.5;
-        }
+    }
+
+    public static final class ClawConstants {
+        //port numbers for claw motors
+        public static final int LEFT_CLAW = 5;
+        public static final int RIGHT_CLAW = 6;
+        //claw motors speed
+        public static final double CLAW_SPEED = 0.25;
+    }
+
+    public static final class PneumaticsConstants {
+        //port numbers for pneumatics
+        public static final int LEFT_SOLENOID = 6;
+        public static final int RIGHT_SOLENOID = 7;
+    }
 
 
     //swerve drive constants
