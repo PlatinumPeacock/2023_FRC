@@ -7,7 +7,9 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Elevator;
@@ -25,7 +27,7 @@ public class RobotContainer {
     
     //xbox controllers
     public static XboxController driverController = new XboxController(Constants.ControllerConstants.DRIVE_CONTROLLER);
-    public static XboxController operatorController = new XboxController(Constants.ControllerConstants.OPERATOR_CONTROLLER);
+    public static CommandXboxController operatorController = new CommandXboxController(Constants.ControllerConstants.OPERATOR_CONTROLLER);
 
     //create each wheel 
     public static final WheelDrive backRight = new WheelDrive (Constants.DriveConstants.REAR_RIGHT_TURNING, Constants.DriveConstants.REAR_RIGHT_DRIVE, Constants.DriveConstants.REAR_RIGHT_ENCODER);
@@ -50,9 +52,11 @@ public class RobotContainer {
     private final RepeatCommand extendIn;
     private final RepeatCommand intake;
     private final RepeatCommand intakeReverse;
+    private final RepeatCommand cube;
+    private final RepeatCommand cone;
     
     public RobotContainer() {
-
+        
         //new drive object and teleop drive command
         DriveWithJoysticksTrial dtt = new DriveWithJoysticksTrial(swerveDrive);
         swerveDrive.setDefaultCommand(dtt);
@@ -62,16 +66,21 @@ public class RobotContainer {
         rotateForward = new RepeatCommand(new Rotate(elevator, 1));
         rotateBackward = new RepeatCommand(new Rotate(elevator, -1));
         extendOut = new RepeatCommand(new Extend(elevator, 1));
+        extendOut.addRequirements(elevator);
         extendIn =  new RepeatCommand(new Extend(elevator, -1));
+        extendIn.addRequirements(elevator);
 
         //new claw object and all intake commands
         claw = new Claw();
         intake = new RepeatCommand(new Intake(claw, 1));
+        intake.addRequirements(claw);
         intakeReverse = new RepeatCommand(new Intake(claw, -1));
+        intake.addRequirements(claw);
 
         //new solenoids object and all pneumatics commands
         clawPneumatics = new Solenoids();
-
+        cube = new RepeatCommand(new Pneumatics(clawPneumatics, false));
+        cone = new RepeatCommand(new Pneumatics(clawPneumatics, true));
 
 
         configureButtonBindings();
@@ -80,32 +89,32 @@ public class RobotContainer {
     private void configureButtonBindings() { 
 
         //elevator buttons
-        JoystickButton rotateForwardButton = new JoystickButton(operatorController, XboxController.Button.kRightBumper.value);
+        Trigger rotateForwardButton = operatorController.rightBumper();
         rotateForwardButton.whileTrue(rotateForward);
 
-        JoystickButton rotateBackwardButton = new JoystickButton(operatorController, XboxController.Button.kLeftBumper.value);
+        Trigger rotateBackwardButton = operatorController.leftBumper();
         rotateBackwardButton.whileTrue(rotateBackward);
 
-        JoystickButton extendOutButton = new JoystickButton(operatorController, XboxController.Button.kY.value);
+        Trigger extendOutButton = operatorController.y();
         extendOutButton.whileTrue(extendOut);
 
-        JoystickButton extendInButton = new JoystickButton(operatorController, XboxController.Button.kX.value);
+        Trigger extendInButton = operatorController.x();
         extendInButton.whileTrue(extendIn);
 
 
         //intake buttons
-        JoystickButton intakeButton = new JoystickButton(operatorController, XboxController.Button.kA.value);
+        Trigger intakeButton = operatorController.a();
         intakeButton.whileTrue(intake);
 
-        JoystickButton intakeReverseButton = new JoystickButton(operatorController, XboxController.Button.kB.value);
-        intakeButton.whileTrue(intakeReverse);
+        Trigger intakeReverseButton = operatorController.b();
+        intakeReverseButton.whileTrue(intakeReverse);
 
         //pneumatics buttons
-        JoystickButton cubeButton = new JoystickButton(operatorController, XboxController.Button.kBack.value);
-        cubeButton.onTrue(new Pneumatics(clawPneumatics, false));
+        Trigger cubeButton = operatorController.back();
+        cubeButton.onTrue(cube);
 
-        JoystickButton coneButton = new JoystickButton(operatorController, XboxController.Button.kStart.value);
-        cubeButton.onTrue(new Pneumatics(clawPneumatics, true));
+        Trigger coneButton = operatorController.start();
+        coneButton.onTrue(cone);
     }
 
     public void teleopInitFunc() {

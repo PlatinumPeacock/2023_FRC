@@ -12,6 +12,7 @@ public class Rotate extends CommandBase{
   public Rotate(Elevator e, int d) {
     elevator = e;
     direction = d;
+    addRequirements(elevator);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 

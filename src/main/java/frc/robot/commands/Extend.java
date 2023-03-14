@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
+import frc.robot.Constants.ElevatorConstants;
 import frc.robot.subsystems.Elevator;
 
 public class Extend extends CommandBase {
@@ -12,6 +13,7 @@ public class Extend extends CommandBase {
   public Extend(Elevator e, int d) {
     elevator = e;
     direction = d;
+    addRequirements(elevator);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 

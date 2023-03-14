@@ -11,8 +11,8 @@ public final class Constants {
 
     public static final class ElevatorConstants {
         //port numbers for elevator motors
-        public static final int ROTATE_ELEVATOR = 3;
-        public static final int EXTEND_ELEVATOR = 4;
+        public static final int ROTATE_ELEVATOR = 18;
+        public static final int EXTEND_ELEVATOR = 19;
         //elevator motor speeds
         public static final double ROTATE_SPEED = 0.5;
         public static final double EXTEND_SPEED = 0.5;
@@ -20,8 +20,8 @@ public final class Constants {
 
     public static final class ClawConstants {
         //port numbers for claw motors
-        public static final int LEFT_CLAW = 5;
-        public static final int RIGHT_CLAW = 6;
+        public static final int LEFT_CLAW = 20;
+        public static final int RIGHT_CLAW = 21;
         //claw motors speed
         public static final double CLAW_SPEED = 0.25;
     }

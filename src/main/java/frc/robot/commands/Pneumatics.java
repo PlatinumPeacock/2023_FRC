@@ -12,6 +12,7 @@ public class Pneumatics extends CommandBase{
     public Pneumatics(Solenoids p, boolean c) {
       clawPneumatics = p;
       close = c;
+      addRequirements(clawPneumatics);
       // Use addRequirements() here to declare subsystem dependencies.
     }
 

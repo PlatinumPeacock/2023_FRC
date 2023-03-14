@@ -12,6 +12,7 @@ public class Intake extends CommandBase{
   public Intake(Claw c, int d) {
     claw = c;
     direction = d;
+    addRequirements(claw);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
