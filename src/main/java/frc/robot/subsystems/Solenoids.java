@@ -9,22 +9,22 @@ public class Solenoids extends SubsystemBase {
     Solenoid leftSolenoid;
     Solenoid rightSolenoid;
 
-    /** Creates a new Elevator. */
+    /** Creates a new Solenoids. */
     public Solenoids() {
-        leftSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.PneumaticsConstants.LEFT_SOLENOID);
-        rightSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.PneumaticsConstants.RIGHT_SOLENOID);
+        leftSolenoid = new Solenoid(Constants.PneumaticsConstants.PCM, PneumaticsModuleType.CTREPCM, Constants.PneumaticsConstants.LEFT_SOLENOID);
+        rightSolenoid = new Solenoid(Constants.PneumaticsConstants.PCM, PneumaticsModuleType.CTREPCM, Constants.PneumaticsConstants.RIGHT_SOLENOID);
     }
 
-    @Override
-    public void periodic() {
-      // This method will be called once per scheduler run
-    }
-
-    //close = true for cone, close = false for cube
-    public void setSolenoid(boolean close)
-    {
+    //close = true for cone, 
+    //close = false for cube
+    public void setSolenoid(boolean close) {
         leftSolenoid.set(close);
-        rightSolenoid.set(close);
+        rightSolenoid.set(!close);
+    }
+
+    public void stop() {
+        leftSolenoid.set(false);
+        rightSolenoid.set(false);
     }
 
 }

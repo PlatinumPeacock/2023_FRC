@@ -14,8 +14,8 @@ public final class Constants {
         public static final int ROTATE_ELEVATOR = 18;
         public static final int EXTEND_ELEVATOR = 19;
         //elevator motor speeds
-        public static final double ROTATE_SPEED = 0.5;
-        public static final double EXTEND_SPEED = 0.5;
+        public static final double ROTATE_SPEED = 1;
+        public static final double EXTEND_SPEED = 1;
     }
 
     public static final class ClawConstants {
@@ -23,13 +23,14 @@ public final class Constants {
         public static final int LEFT_CLAW = 20;
         public static final int RIGHT_CLAW = 21;
         //claw motors speed
-        public static final double CLAW_SPEED = 0.25;
+        public static final double CLAW_SPEED = 1;
     }
 
     public static final class PneumaticsConstants {
         //port numbers for pneumatics
-        public static final int LEFT_SOLENOID = 6;
-        public static final int RIGHT_SOLENOID = 7;
+        public static final int PCM = 1;
+        public static final int LEFT_SOLENOID = 0;
+        public static final int RIGHT_SOLENOID = 1;
     }
 
 

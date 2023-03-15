@@ -5,12 +5,12 @@ import com.ctre.phoenix.sensors.WPI_Pigeon2;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.SwerveDrive;
@@ -21,6 +21,7 @@ import frc.robot.commands.Extend;
 import frc.robot.commands.Intake;
 import frc.robot.commands.Pneumatics;
 import frc.robot.commands.Rotate;
+import edu.wpi.first.wpilibj.Compressor;
 
 
 public class RobotContainer {
@@ -52,11 +53,18 @@ public class RobotContainer {
     private final RepeatCommand extendIn;
     private final RepeatCommand intake;
     private final RepeatCommand intakeReverse;
-    private final RepeatCommand cube;
-    private final RepeatCommand cone;
+
+    //create all pneumatics commands
+    private final Pneumatics cube;
+    private final Pneumatics cone;
+
+    private final Compressor comp;
     
     public RobotContainer() {
+
+        comp = new Compressor(1, PneumaticsModuleType.CTREPCM);
         
+
         //new drive object and teleop drive command
         DriveWithJoysticksTrial dtt = new DriveWithJoysticksTrial(swerveDrive);
         swerveDrive.setDefaultCommand(dtt);
@@ -79,8 +87,9 @@ public class RobotContainer {
 
         //new solenoids object and all pneumatics commands
         clawPneumatics = new Solenoids();
-        cube = new RepeatCommand(new Pneumatics(clawPneumatics, false));
-        cone = new RepeatCommand(new Pneumatics(clawPneumatics, true));
+        //clawPneumatics.stop();
+        cube = new Pneumatics(clawPneumatics, false);
+        cone = new Pneumatics(clawPneumatics, true);
 
 
         configureButtonBindings();
@@ -111,10 +120,10 @@ public class RobotContainer {
 
         //pneumatics buttons
         Trigger cubeButton = operatorController.back();
-        cubeButton.onTrue(cube);
+        cubeButton.whileTrue(cube);
 
         Trigger coneButton = operatorController.start();
-        coneButton.onTrue(cone);
+        coneButton.whileTrue(cone);
     }
 
     public void teleopInitFunc() {

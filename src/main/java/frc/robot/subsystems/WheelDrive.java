@@ -4,7 +4,6 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import frc.robot.Constants;
 
 import com.ctre.phoenix.sensors.CANCoder;
 
@@ -29,12 +28,6 @@ public class WheelDrive {
 
     }
 
-    /* 
-    //invert angle motor
-    public void invertAngleMotor() {
-        //angleMotor.setInverted(invert);
-    }
-    */
 
     public void drive(double speed, double angle) {
         

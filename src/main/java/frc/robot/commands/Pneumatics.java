@@ -8,7 +8,7 @@ public class Pneumatics extends CommandBase{
     Solenoids clawPneumatics;
     boolean close;
 
-    /** Creates a new Intake. */
+    /** Creates a new Pneumatics. */
     public Pneumatics(Solenoids p, boolean c) {
       clawPneumatics = p;
       close = c;
@@ -29,7 +29,7 @@ public class Pneumatics extends CommandBase{
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-      
+      clawPneumatics.stop();
     }
 
     // Returns true when the command should end.

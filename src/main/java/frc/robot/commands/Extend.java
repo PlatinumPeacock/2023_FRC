@@ -9,7 +9,7 @@ public class Extend extends CommandBase {
     Elevator elevator;
     int direction;
 
-  /** Creates a new Rotate. */
+  /** Creates a new Extend. */
   public Extend(Elevator e, int d) {
     elevator = e;
     direction = d;
