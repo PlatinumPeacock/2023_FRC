@@ -4,15 +4,18 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.Faults;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 public class Elevator extends SubsystemBase{
-  VictorSPX rotateMotor;
+  TalonSRX rotateMotor;
   VictorSPX extendMotor;
+  Faults faults = new Faults();
 
   /** Creates a new Elevator. */
   public Elevator() {
-    rotateMotor = new VictorSPX(Constants.ElevatorConstants.ROTATE_ELEVATOR);
+    rotateMotor = new TalonSRX(Constants.ElevatorConstants.ROTATE_ELEVATOR);
     extendMotor = new VictorSPX(Constants.ElevatorConstants.EXTEND_ELEVATOR);
   }
 
@@ -24,7 +27,15 @@ public class Elevator extends SubsystemBase{
   //direction should be either -1 or 1 to set motor forward or reverse
   public void rotate(double speed, int direction)
   {
-    rotateMotor.set(ControlMode.PercentOutput, speed * direction);
+    rotateMotor.getFaults(faults);
+    if (rotateMotor.getSelectedSensorPosition() >= 100000 && speed < 0)
+      stopRotate();
+
+    else if (rotateMotor.getSelectedSensorPosition() <= -100000 && speed < 0)  
+      stopRotate();
+      
+    else  
+      rotateMotor.set(ControlMode.PercentOutput, speed * direction);
   }
 
 

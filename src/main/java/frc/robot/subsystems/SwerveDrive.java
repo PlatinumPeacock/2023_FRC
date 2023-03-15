@@ -66,11 +66,11 @@ public class SwerveDrive extends SubsystemBase {
         double backRightAngle = Math.atan2 (b, c) * 180/ Math.PI; //arctan(+1) = 45 135
         double frontLeftAngle = Math.atan2 (b, d) * 180/ Math.PI; //arctan(-1) = -45 -135
 
-
+        //set all speeds the same but different angles
         frontRight.drive (frontRightSpeed, frontRightAngle);
-        frontLeft.drive (backLeftSpeed, backLeftAngle);
-        backRight.drive (backRightSpeed, backRightAngle);
-        backLeft.drive (frontLeftSpeed, frontLeftAngle);
+        frontLeft.drive (frontRightSpeed, backLeftAngle);
+        backRight.drive (frontRightSpeed, backRightAngle);
+        backLeft.drive (frontRightSpeed, frontLeftAngle);
     
     
     }
