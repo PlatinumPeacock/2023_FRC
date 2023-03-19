@@ -1,6 +1,7 @@
 package frc.robot;
 
 public final class Constants {
+
     public static final class ControllerConstants {
         public static final int DRIVE_CONTROLLER = 0;
         public static final int OPERATOR_CONTROLLER = 1;
@@ -10,16 +11,15 @@ public final class Constants {
     }
 
     public static final class ElevatorConstants {
-        //port numbers for elevator motors
-        public static final int ROTATE_ELEVATOR = 19; // was 18
-        public static final int EXTEND_ELEVATOR = 18; //was 19
+        //port numbers for elevator motor
+        public static final int EXTEND_ELEVATOR = 18;
         //elevator motor speeds
         public static final double ROTATE_SPEED = 1;
         public static final double EXTEND_SPEED = 1;
     }
 
     public static final class ClawConstants {
-        //port numbers for claw motors
+        //port numbers for intake motors
         public static final int LEFT_CLAW = 20;
         public static final int RIGHT_CLAW = 21;
         //claw motors speed
@@ -29,8 +29,10 @@ public final class Constants {
     public static final class PneumaticsConstants {
         //port numbers for pneumatics
         public static final int PCM = 1;
-        public static final int LEFT_SOLENOID = 0;
-        public static final int RIGHT_SOLENOID = 1;
+        public static final int CLAW_LEFT_SOLENOID = 0;
+        public static final int CLAW_RIGHT_SOLENOID = 1;
+        public static final int ELEVATOR_LEFT_SOLENOID = 2;
+        public static final int ELEVATOR_RIGHT_SOLENOID = 3;
     }
 
     public static final class LimeLightConstants {
@@ -40,14 +42,15 @@ public final class Constants {
     }
 
 
-    //swerve drive constants
-    public static final double L = 0.56515; //length between axles
-    public static final double W = 0.56515; //width between axles
-    public static final int PIGEON_ID = 2;
-    public static final double MAX_VOLTS = 8;
 
     public static final class DriveConstants {
-            
+
+        //swerve drive constants
+        public static final double L = 0.56515; //length between axles // Distance between front and back wheels on robot
+        public static final double W = 0.56515; //width between axles // Distance between centers of right and left wheels on robot
+        public static final int PIGEON_ID = 2;
+        public static final double MAX_VOLTS = 8;   
+
         // Angular offsets of the modules relative to the chassis in radians
         /* 
         public static final double kFrontLeftChassisAngularOffset = -Math.PI / 2;
@@ -56,7 +59,6 @@ public final class Constants {
         public static final double kBackRightChassisAngularOffset = Math.PI / 2;
         */
 
-        //old constants
         //motor and encoder ports
         public static final int FRONT_LEFT_DRIVE = 16;
         public static final int REAR_LEFT_DRIVE = 15;
@@ -80,13 +82,6 @@ public final class Constants {
         public static final double kFrontRightAngleZero = -104.68;
         public static final double kRearRightAngleZero = 23.54;
     
-    
-        public static final double kTrackWidth = 0.56515;
-        // Distance between centers of right and left wheels on robot
-        public static final double kWheelBase = 0.56515;
-        // Distance between front and back wheels on robot
-
-        
       }
       
 }

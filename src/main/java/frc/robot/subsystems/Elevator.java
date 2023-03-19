@@ -8,33 +8,17 @@ import com.ctre.phoenix.motorcontrol.Faults;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 public class Elevator extends SubsystemBase{
-  TalonSRX rotateMotor;
   TalonSRX extendMotor;
   Faults faults = new Faults();
 
   /** Creates a new Elevator. */
   public Elevator() {
-    rotateMotor = new TalonSRX(Constants.ElevatorConstants.ROTATE_ELEVATOR);
     extendMotor = new TalonSRX(Constants.ElevatorConstants.EXTEND_ELEVATOR);
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-  }
-
-  //direction should be either -1 or 1 to set motor forward or reverse
-  public void rotate(double speed, int direction)
-  {
-    rotateMotor.getFaults(faults);
-    if (rotateMotor.getSelectedSensorPosition() >= 100000 && speed < 0)
-      stopRotate();
-
-    else if (rotateMotor.getSelectedSensorPosition() <= -100000 && speed < 0)  
-      stopRotate();
-
-    else  
-      rotateMotor.set(ControlMode.PercentOutput, speed * direction);
   }
 
 
@@ -44,12 +28,7 @@ public class Elevator extends SubsystemBase{
   }
 
 
-  public void stopRotate()
-  {
-    rotateMotor.set(ControlMode.PercentOutput, 0);
-  }
-
-  public void stopExtend()
+  public void stop()
   {
     extendMotor.set(ControlMode.PercentOutput, 0);
   }

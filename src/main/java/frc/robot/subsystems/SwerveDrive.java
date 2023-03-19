@@ -59,7 +59,7 @@ public class SwerveDrive extends SubsystemBase {
         }
 
        
-        double r = Math.sqrt((Constants.L * Constants.L) + (Constants.W * Constants.W));
+        double r = Math.sqrt((Constants.DriveConstants.L * Constants.DriveConstants.L) + (Constants.DriveConstants.W * Constants.DriveConstants.W));
         //y1 *= -1;
         //x2 *= -1;
 
@@ -72,10 +72,10 @@ public class SwerveDrive extends SubsystemBase {
         x1 = -y1 * Math.sin(theta) + x1 * Math.cos(theta);
         y1 = temp;
 
-        double a = x1 - x2 * (Constants.L / r);
-        double b = x1 + x2 * (Constants.L / r);
-        double c = y1 - x2 * (Constants.W / r);
-        double d = y1 + x2 * (Constants.W / r);
+        double a = x1 - x2 * (Constants.DriveConstants.L / r);
+        double b = x1 + x2 * (Constants.DriveConstants.L / r);
+        double c = y1 - x2 * (Constants.DriveConstants.W / r);
+        double d = y1 + x2 * (Constants.DriveConstants.W / r);
 
         double frontRightSpeed = Math.sqrt ((a * a) + (c * c));
         double backLeftSpeed = Math.sqrt ((a * a) + (d * d));

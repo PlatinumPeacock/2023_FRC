@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -21,7 +20,6 @@ import frc.robot.commands.DriveWithJoysticksTrial;
 import frc.robot.commands.Extend;
 import frc.robot.commands.Intake;
 import frc.robot.commands.Pneumatics;
-import frc.robot.commands.Rotate;
 import edu.wpi.first.wpilibj.Compressor;
 
 
@@ -49,10 +47,9 @@ public class RobotContainer {
     private final Elevator elevator;
     private final Claw claw;
     private final Solenoids clawPneumatics;
+    private final Solenoids elevatorPneumatics;
 
     //create all repeatCommands (because the whileHeld() method no longer exists)
-    private final RepeatCommand rotateForward;
-    private final RepeatCommand rotateBackward;
     private final RepeatCommand extendOut;
     private final RepeatCommand extendIn;
     private final RepeatCommand intake;
@@ -61,6 +58,8 @@ public class RobotContainer {
     //create all pneumatics commands
     private final Pneumatics cube;
     private final Pneumatics cone;
+    private final Pneumatics rotateForward;
+    private final Pneumatics rotateBackward;
 
     private final Compressor comp;
     
@@ -75,8 +74,6 @@ public class RobotContainer {
 
         //new elevator object and all elevator commands
         elevator = new Elevator();
-        rotateForward = new RepeatCommand(new Rotate(elevator, 1));
-        rotateBackward = new RepeatCommand(new Rotate(elevator, -1));
         extendOut = new RepeatCommand(new Extend(elevator, 1));
         extendOut.addRequirements(elevator);
         extendIn =  new RepeatCommand(new Extend(elevator, -1));
@@ -89,11 +86,13 @@ public class RobotContainer {
         intakeReverse = new RepeatCommand(new Intake(claw, -1));
         intake.addRequirements(claw);
 
-        //new solenoids object and all pneumatics commands
-        clawPneumatics = new Solenoids();
-        //clawPneumatics.stop();
+        //new solenoids objects and all pneumatics commands
+        clawPneumatics = new Solenoids(Constants.PneumaticsConstants.CLAW_LEFT_SOLENOID, Constants.PneumaticsConstants.CLAW_RIGHT_SOLENOID);
+        elevatorPneumatics = new Solenoids(Constants.PneumaticsConstants.ELEVATOR_LEFT_SOLENOID, Constants.PneumaticsConstants.ELEVATOR_RIGHT_SOLENOID);
         cube = new Pneumatics(clawPneumatics, false);
         cone = new Pneumatics(clawPneumatics, true);
+        rotateForward = new Pneumatics(elevatorPneumatics, false);
+        rotateBackward = new Pneumatics(elevatorPneumatics, true);
 
 
         configureButtonBindings();
@@ -102,12 +101,6 @@ public class RobotContainer {
     private void configureButtonBindings() { 
 
         //elevator buttons
-        Trigger rotateForwardButton = operatorController.rightBumper();
-        rotateForwardButton.whileTrue(rotateForward);
-
-        Trigger rotateBackwardButton = operatorController.leftBumper();
-        rotateBackwardButton.whileTrue(rotateBackward);
-
         Trigger extendOutButton = operatorController.y();
         extendOutButton.whileTrue(extendOut);
 
@@ -128,6 +121,12 @@ public class RobotContainer {
 
         Trigger coneButton = operatorController.start();
         coneButton.whileTrue(cone);
+        
+        Trigger rotateForwardButton = operatorController.rightBumper();
+        rotateForwardButton.whileTrue(rotateForward);
+
+        Trigger rotateBackwardButton = operatorController.leftBumper();
+        rotateBackwardButton.whileTrue(rotateBackward);
     }
 
     public void teleopInitFunc() {

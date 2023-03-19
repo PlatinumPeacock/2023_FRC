@@ -10,16 +10,16 @@ public class Solenoids extends SubsystemBase {
     Solenoid rightSolenoid;
 
     /** Creates a new Solenoids. */
-    public Solenoids() {
-        leftSolenoid = new Solenoid(Constants.PneumaticsConstants.PCM, PneumaticsModuleType.CTREPCM, Constants.PneumaticsConstants.LEFT_SOLENOID);
-        rightSolenoid = new Solenoid(Constants.PneumaticsConstants.PCM, PneumaticsModuleType.CTREPCM, Constants.PneumaticsConstants.RIGHT_SOLENOID);
+    public Solenoids(int left, int right) {
+        leftSolenoid = new Solenoid(Constants.PneumaticsConstants.PCM, PneumaticsModuleType.CTREPCM, left);
+        rightSolenoid = new Solenoid(Constants.PneumaticsConstants.PCM, PneumaticsModuleType.CTREPCM, right);
     }
 
-    //close = true for cone, 
-    //close = false for cube
-    public void setSolenoid(boolean close) {
-        leftSolenoid.set(close);
-        rightSolenoid.set(!close);
+    //on = true for cone and backward elevator rotation, 
+    //on = false for cube and forward elevator rotation
+    public void setSolenoid(boolean on) {
+        leftSolenoid.set(on);
+        rightSolenoid.set(!on);
     }
 
     public void stop() {
