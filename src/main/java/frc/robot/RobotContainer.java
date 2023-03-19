@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.LimeLight;
 import frc.robot.subsystems.SwerveDrive;
 import frc.robot.subsystems.WheelDrive;
 import frc.robot.subsystems.Solenoids;
@@ -37,9 +38,12 @@ public class RobotContainer {
     public static final WheelDrive frontLeft = new WheelDrive (Constants.DriveConstants.FRONT_LEFT_TURNING, Constants.DriveConstants.FRONT_LEFT_DRIVE, Constants.DriveConstants.FRONT_LEFT_ENCODER);
 
     public static final WPI_Pigeon2 pigeon2 = new WPI_Pigeon2(Constants.DriveConstants.PIGEON2);
+
+    //create LimeLight
+    public static final LimeLight limeLight = new LimeLight();
     
     //create swerve drive
-    public static final SwerveDrive swerveDrive = new SwerveDrive (backRight, backLeft, frontRight, frontLeft, pigeon2);
+    public static final SwerveDrive swerveDrive = new SwerveDrive (backRight, backLeft, frontRight, frontLeft, pigeon2, limeLight);
 
     //create all subsystem objects
     private final Elevator elevator;

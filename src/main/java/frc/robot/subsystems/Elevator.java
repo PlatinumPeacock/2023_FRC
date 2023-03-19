@@ -6,17 +6,16 @@ import frc.robot.Constants;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.Faults;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 public class Elevator extends SubsystemBase{
   TalonSRX rotateMotor;
-  VictorSPX extendMotor;
+  TalonSRX extendMotor;
   Faults faults = new Faults();
 
   /** Creates a new Elevator. */
   public Elevator() {
     rotateMotor = new TalonSRX(Constants.ElevatorConstants.ROTATE_ELEVATOR);
-    extendMotor = new VictorSPX(Constants.ElevatorConstants.EXTEND_ELEVATOR);
+    extendMotor = new TalonSRX(Constants.ElevatorConstants.EXTEND_ELEVATOR);
   }
 
   @Override
@@ -33,7 +32,7 @@ public class Elevator extends SubsystemBase{
 
     else if (rotateMotor.getSelectedSensorPosition() <= -100000 && speed < 0)  
       stopRotate();
-      
+
     else  
       rotateMotor.set(ControlMode.PercentOutput, speed * direction);
   }
