@@ -15,7 +15,7 @@ public final class Constants {
         public static final int EXTEND_ELEVATOR = 18;
         //elevator motor speeds
         public static final double ROTATE_SPEED = 1;
-        public static final double EXTEND_SPEED = 1;
+        public static final double EXTEND_SPEED = 0.25;
     }
 
     public static final class ClawConstants {

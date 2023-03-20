@@ -17,6 +17,12 @@ public class SwerveDrive extends SubsystemBase {
     private double x1;
     private double y1;
     private double x2;
+    //store previous angle when joysticks are at zero :D
+    private double fR0;
+    private double fL0;
+    private double bR0;
+    private double bL0;
+
 
     public SwerveDrive (WheelDrive backRight, WheelDrive backLeft, WheelDrive frontRight, WheelDrive frontLeft, WPI_Pigeon2 pigeon2, LimeLight l) {
         this.backRight = backRight;
@@ -25,6 +31,10 @@ public class SwerveDrive extends SubsystemBase {
         this.frontLeft = frontLeft;
         this.pigeon2 = pigeon2;
         limeLight = l;
+        fR0 = 0;
+        fL0 = 0;
+        bR0 = 0;
+        bL0 = 0;
     }
 
     public void drive () {
@@ -63,7 +73,7 @@ public class SwerveDrive extends SubsystemBase {
         //y1 *= -1;
         //x2 *= -1;
 
-        int yawOffset = -87;
+        int yawOffset = 90;
 
         double theta = pigeon2.getYaw() + yawOffset;
         theta = theta*Math.PI/180;
@@ -97,11 +107,27 @@ public class SwerveDrive extends SubsystemBase {
             backLeftAngle *= Constants.LimeLightConstants.AUTO_ROTATE_SPEED;
         }
 
-        //set all speeds the same but different angles
-        frontRight.drive (frontRightSpeed, frontRightAngle);
-        frontLeft.drive (frontRightSpeed, backLeftAngle);
-        backRight.drive (frontRightSpeed, backRightAngle);
-        backLeft.drive (frontRightSpeed, frontLeftAngle);
+        
+
+        if (frontRightAngle != 0) {
+            //save the current angles so that the wheels do not return to zero when the joysticks are at zero
+            fR0 = frontRightAngle;
+            fL0 = frontLeftAngle;
+            bR0 = backRightAngle;
+            bL0 = backLeftAngle;
+            //set all speeds the same but different angles
+            frontRight.drive (frontRightSpeed, frontRightAngle);
+            frontLeft.drive (frontRightSpeed, backLeftAngle);
+            backRight.drive (frontRightSpeed, backRightAngle);
+            backLeft.drive (frontRightSpeed, frontLeftAngle);
+        }
+        else {
+            //if the joysticks are at zero, set angle motors to the previous angles instead of returning to zero2
+            frontRight.drive (frontRightSpeed, fR0);
+            frontLeft.drive (frontRightSpeed, bL0);
+            backRight.drive (frontRightSpeed, bR0);
+            backLeft.drive (frontRightSpeed, fL0);
+        }
     
     
     }
@@ -117,6 +143,8 @@ public class SwerveDrive extends SubsystemBase {
         backRight.drive(forward, rotation);
         backLeft.drive(forward, rotation);
     } 
+
+
 
     @Override
     public void periodic() {
