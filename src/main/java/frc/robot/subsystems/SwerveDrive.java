@@ -22,6 +22,7 @@ public class SwerveDrive extends SubsystemBase {
     private double fL0;
     private double bR0;
     private double bL0;
+    private double rotation;
 
 
     public SwerveDrive (WheelDrive backRight, WheelDrive backLeft, WheelDrive frontRight, WheelDrive frontLeft, WPI_Pigeon2 pigeon2, LimeLight l) {
@@ -46,11 +47,11 @@ public class SwerveDrive extends SubsystemBase {
             //driveToTarget();
             //return;
             limeLight.adjustToTarget();
-            double forward = limeLight.getForward();
-            double rotation = limeLight.getRotation();
+            
+            rotation = limeLight.getRotation();
             x1 = 0;
             y1 = 0;
-            x2 = rotation;
+            x2 = 0;
         }
         else {
         x1 = driver.getRawAxis(Constants.ControllerConstants.LEFT_X_AXIS);
@@ -99,12 +100,15 @@ public class SwerveDrive extends SubsystemBase {
 
         //set speed to be slower when it is adjusting to a target
         if (adjustToTargetButton) {
-            frontRightSpeed = driver.getRawAxis(Constants.ControllerConstants.LEFT_Y_AXIS) * -Constants.LimeLightConstants.AUTO_DRIVE_SPEED;
+            if (rotation == 0)
+            frontRightSpeed = 0;
+            else
+            frontRightSpeed = -Constants.LimeLightConstants.AUTO_DRIVE_SPEED;
 
-            frontRightAngle *= Constants.LimeLightConstants.AUTO_ROTATE_SPEED;
-            frontLeftAngle *= Constants.LimeLightConstants.AUTO_ROTATE_SPEED;
-            backRightAngle *= Constants.LimeLightConstants.AUTO_ROTATE_SPEED;
-            backLeftAngle *= Constants.LimeLightConstants.AUTO_ROTATE_SPEED;
+            frontRightAngle = rotation;
+            frontLeftAngle = rotation;
+            backRightAngle = rotation;
+            backLeftAngle = rotation;
         }
 
         
@@ -132,20 +136,21 @@ public class SwerveDrive extends SubsystemBase {
     
     }
 
-    //code based on example from LimeLight website using arcade drive
-    //probably won't work because each wheel is set to the same rotation
-    public void driveToTarget() {
-        limeLight.adjustToTarget();
-        double forward = limeLight.getForward();
-        double rotation = limeLight.getRotation();
-        frontRight.drive(forward, rotation);
-        frontLeft.drive(forward, rotation);
-        backRight.drive(forward, rotation);
-        backLeft.drive(forward, rotation);
-    } 
+    public void driveForward() {
+        frontRight.drive (-Constants.DriveConstants.AUTON_SPEED, 0);
+        frontLeft.drive (-Constants.DriveConstants.AUTON_SPEED, 0);
+        backRight.drive (-Constants.DriveConstants.AUTON_SPEED, 0);
+        backLeft.drive (-Constants.DriveConstants.AUTON_SPEED, 0);
+    }
 
-
-
+    public void stop()
+    {
+        frontRight.drive (0, 0);
+        frontLeft.drive (0, 0);
+        backRight.drive (0, 0);
+        backLeft.drive (0, 0);
+    }
+    
     @Override
     public void periodic() {
       // This method will be called once per scheduler run

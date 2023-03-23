@@ -4,8 +4,11 @@ import com.ctre.phoenix.sensors.WPI_Pigeon2;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -17,9 +20,14 @@ import frc.robot.subsystems.SwerveDrive;
 import frc.robot.subsystems.WheelDrive;
 import frc.robot.subsystems.Solenoids;
 import frc.robot.commands.DriveWithJoysticksTrial;
+import frc.robot.commands.ElevConeBottom;
+import frc.robot.commands.ElevConeTop;
+import frc.robot.commands.ElevShelf;
 import frc.robot.commands.Extend;
 import frc.robot.commands.Intake;
+import frc.robot.commands.Intake_Reverse;
 import frc.robot.commands.Pneumatics;
+import frc.robot.commands.auton.AutonomousOne;
 import edu.wpi.first.wpilibj.Compressor;
 
 
@@ -52,6 +60,9 @@ public class RobotContainer {
     //create all repeatCommands (because the whileHeld() method no longer exists)
     private final RepeatCommand extendOut;
     private final RepeatCommand extendIn;
+    private final RepeatCommand topConeHeight;
+    private final RepeatCommand bottomConeHeight;
+    private final RepeatCommand shelfHeight;
     private final RepeatCommand intake;
     private final RepeatCommand intakeReverse;
 
@@ -62,6 +73,8 @@ public class RobotContainer {
     private final Pneumatics rotateBackward;
 
     private final Compressor comp;
+
+    SendableChooser<Command> chooser = new SendableChooser<>();
     
     public RobotContainer() {
 
@@ -78,12 +91,18 @@ public class RobotContainer {
         extendOut.addRequirements(elevator);
         extendIn =  new RepeatCommand(new Extend(elevator, -1));
         extendIn.addRequirements(elevator);
+        topConeHeight = new RepeatCommand(new ElevConeTop(elevator, 358628));
+        topConeHeight.addRequirements(elevator);
+        bottomConeHeight = new RepeatCommand(new ElevConeBottom(elevator, 300000));
+        bottomConeHeight.addRequirements(elevator);
+        shelfHeight = new RepeatCommand(new ElevShelf(elevator, 280000));
+        shelfHeight.addRequirements(elevator);
 
         //new claw object and all intake commands
         claw = new Claw();
         intake = new RepeatCommand(new Intake(claw, 1));
         intake.addRequirements(claw);
-        intakeReverse = new RepeatCommand(new Intake(claw, -1));
+        intakeReverse = new RepeatCommand(new Intake_Reverse(claw, -1));
         intake.addRequirements(claw);
 
         //new solenoids objects and all pneumatics commands
@@ -93,6 +112,15 @@ public class RobotContainer {
         cone = new Pneumatics(clawPneumatics, true);
         rotateForward = new Pneumatics(elevatorPneumatics, false);
         rotateBackward = new Pneumatics(elevatorPneumatics, true);
+
+        AutonomousOne autonOne = new AutonomousOne(elevatorPneumatics, elevator, clawPneumatics, swerveDrive);
+        
+        //Add choices as options here
+        //Default option
+        chooser.setDefaultOption("Autonomous One", autonOne);
+ 
+        //Add choice so smart dashboard
+        SmartDashboard.putData("Autonomous", chooser);
 
 
         configureButtonBindings();
@@ -127,9 +155,23 @@ public class RobotContainer {
 
         Trigger rotateBackwardButton = operatorController.leftBumper();
         rotateBackwardButton.whileTrue(rotateBackward);
+
+        Trigger topConeButton = operatorController.povUp();
+        topConeButton.whileTrue(topConeHeight);
+
+        Trigger bottomConeButton = operatorController.povDown();
+        bottomConeButton.whileTrue(bottomConeHeight);
+
+        Trigger shelfButton = operatorController.povLeft();
+        shelfButton.whileTrue(shelfHeight);
     }
 
     public void teleopInitFunc() {
 
     }    
+
+    public Command getAutonomousCommand() {
+      //An ExampleCommand will run in autonomous
+      return chooser.getSelected();
+    }
 }

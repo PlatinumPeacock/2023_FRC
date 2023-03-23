@@ -9,7 +9,6 @@ import frc.robot.Constants;
 public class LimeLight extends SubsystemBase{
     
     NetworkTable table;
-    double forward;
     double rotation;
 
     //limelight variables
@@ -44,25 +43,23 @@ public class LimeLight extends SubsystemBase{
         updateLimeLightTracking();
 
         if (hasTarget) {
-            forward = (Constants.LimeLightConstants.DESIRED_TARGET_AREA - ta) / 2;
-            //acceptable amount of error
-            if (forward < 0.9 && forward > -0.9)
-                forward = 0;
-
             rotation = tx;
             //acceptable amount of error
-            if (rotation < 2 && rotation > -2)
+            //if (tx < 2 && tx > -2) // this is the tolerance to target alignment
+               // rotation = 0;
+            //else
+             if (rotation <= -2)
+                rotation = -90;
+            else if (rotation >=2)
+                rotation = 90;
+                else 
                 rotation = 0;
         }
         else {
-            forward = 0;
             rotation = 0;
         }
     }
 
-    public double getForward() {
-        return forward;
-    }
 
     public double getRotation() {
         return rotation;

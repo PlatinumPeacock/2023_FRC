@@ -23,7 +23,8 @@ public final class Constants {
         public static final int LEFT_CLAW = 20;
         public static final int RIGHT_CLAW = 21;
         //claw motors speed
-        public static final double CLAW_SPEED = 1;
+        public static final double CLAW_SPEED = 0.4;
+        public static final double CLAW_SPEED_REVERSE = 1;
     }
 
     public static final class PneumaticsConstants {
@@ -36,7 +37,7 @@ public final class Constants {
     }
 
     public static final class LimeLightConstants {
-        public static final double AUTO_DRIVE_SPEED = 0.1;
+        public static final double AUTO_DRIVE_SPEED = 0.05;
         public static final double AUTO_ROTATE_SPEED = 0.1;
         public static final double DESIRED_TARGET_AREA = 0.9; // area of the target when the robot reaches desired distance
     }
@@ -81,6 +82,10 @@ public final class Constants {
         public static final double kRearLeftAngleZero = 121.38;
         public static final double kFrontRightAngleZero = -104.68;
         public static final double kRearRightAngleZero = 23.54;
+
+        //auton driving
+        public static final double AUTON_SPEED = 0.4;
+        public static final double TIME = 1.5; //time robot drives forward in auton :))))
     
       }
       

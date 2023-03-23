@@ -21,10 +21,16 @@ public class Elevator extends SubsystemBase{
     // This method will be called once per scheduler run
   }
 
-
+  //extend out direction = 1, retract direction = -1
   public void extend(double speed, int direction)
   {
+    System.out.println(getElevatorPosition());
     extendMotor.set(ControlMode.PercentOutput, speed * direction);
+  }
+
+  public double getElevatorPosition() 
+  {
+    return extendMotor.getSelectedSensorPosition();
   }
 
 
@@ -32,5 +38,7 @@ public class Elevator extends SubsystemBase{
   {
     extendMotor.set(ControlMode.PercentOutput, 0);
   }
+
+
 
 }
