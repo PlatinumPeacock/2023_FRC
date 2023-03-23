@@ -38,7 +38,9 @@ public class LimeLight extends SubsystemBase{
         hasTarget = tv != 0;
       }
 
-    public void adjustToTarget() {
+    public void adjustToTarget(int pipeline) {
+        //switch between pipelines. 0 = reflective tape, 1 = apriltag
+        NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(pipeline);
 
         updateLimeLightTracking();
 

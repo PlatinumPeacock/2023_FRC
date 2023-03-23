@@ -40,13 +40,20 @@ public class SwerveDrive extends SubsystemBase {
 
     public void drive () {
         XboxController driver = RobotContainer.driverController;
-        boolean adjustToTargetButton = driver.getAButton();
+        boolean adjustToTapeButton = driver.getAButton();
+        boolean adjustToApriltagButton = driver.getBButton();
 
-        //use camera to adjust to a target when A is held on driver controller
-        if (adjustToTargetButton) {
-            //driveToTarget();
-            //return;
-            limeLight.adjustToTarget();
+        //use camera to adjust to a target when A or B are held on driver controller
+        if (adjustToTapeButton) {
+            limeLight.adjustToTarget(0);
+            
+            rotation = limeLight.getRotation();
+            x1 = 0;
+            y1 = 0;
+            x2 = 0;
+        }
+        if (adjustToApriltagButton) { //remember to add an offset to the x value because apriltag is not centered on shelf
+            limeLight.adjustToTarget(1);
             
             rotation = limeLight.getRotation();
             x1 = 0;
@@ -99,7 +106,7 @@ public class SwerveDrive extends SubsystemBase {
         double frontLeftAngle = Math.atan2 (b, d) * 180/ Math.PI; //arctan(-1) = -45 -135
 
         //set speed to be slower when it is adjusting to a target
-        if (adjustToTargetButton) {
+        if (adjustToTapeButton || adjustToApriltagButton) {
             if (rotation == 0)
             frontRightSpeed = 0;
             else
