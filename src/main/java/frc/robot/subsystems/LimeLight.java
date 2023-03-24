@@ -45,14 +45,16 @@ public class LimeLight extends SubsystemBase{
         updateLimeLightTracking();
 
         if (hasTarget) {
-            rotation = tx;
+            double tagID = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tid").getDouble(0);
+            
+            //offset shelf tags
+            if (tagID == 4 || tagID == 5)
+                tx -= 12;
+
             //acceptable amount of error
-            //if (tx < 2 && tx > -2) // this is the tolerance to target alignment
-               // rotation = 0;
-            //else
-             if (rotation <= -2)
+             if (tx <= -2)
                 rotation = -90;
-            else if (rotation >=2)
+            else if (tx >= 2)
                 rotation = 90;
                 else 
                 rotation = 0;

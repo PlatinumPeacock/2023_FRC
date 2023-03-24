@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import frc.robot.Constants;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
@@ -17,7 +18,7 @@ public class SwerveDrive extends SubsystemBase {
     private double x1;
     private double y1;
     private double x2;
-    //store previous angle when joysticks are at zero :D
+    //store previous angle when joysticks are at zero
     private double fR0;
     private double fL0;
     private double bR0;
@@ -36,6 +37,7 @@ public class SwerveDrive extends SubsystemBase {
         fL0 = 0;
         bR0 = 0;
         bL0 = 0;
+
     }
 
     public void drive () {
@@ -52,9 +54,11 @@ public class SwerveDrive extends SubsystemBase {
             y1 = 0;
             x2 = 0;
         }
-        if (adjustToApriltagButton) { //remember to add an offset to the x value because apriltag is not centered on shelf
+        if (adjustToApriltagButton) {
             limeLight.adjustToTarget(1);
-            
+             {
+                rotation = limeLight.getRotation();
+            }
             rotation = limeLight.getRotation();
             x1 = 0;
             y1 = 0;
