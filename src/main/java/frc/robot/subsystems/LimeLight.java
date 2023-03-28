@@ -2,8 +2,10 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 
 
 public class LimeLight extends SubsystemBase{
@@ -39,6 +41,7 @@ public class LimeLight extends SubsystemBase{
       }
 
     public void adjustToTarget(int pipeline) {
+        XboxController driver = RobotContainer.driverController;
         //switch between pipelines. 0 = reflective tape, 1 = apriltag
         NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(pipeline);
 
@@ -48,9 +51,12 @@ public class LimeLight extends SubsystemBase{
             double tagID = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tid").getDouble(0);
             
             //offset shelf tags
-            if (tagID == 4 || tagID == 5)
-                tx -= 12;
-
+            if (tagID == 4 || tagID == 5) {
+                if (driver.getBButton())
+                    tx += 23;
+                else
+                    tx -= 23;    
+            }
             //acceptable amount of error
              if (tx <= -2)
                 rotation = -90;

@@ -7,11 +7,13 @@ import frc.robot.subsystems.Elevator;
 public class Extend extends CommandBase {
     Elevator elevator;
     int direction;
+    double speed;
 
   /** Creates a new Extend. */
-  public Extend(Elevator e, int d) {
+  public Extend(Elevator e, int d, double s) {
     elevator = e;
     direction = d;
+    speed = s;
     addRequirements(elevator);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -23,7 +25,7 @@ public class Extend extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    elevator.extend(Constants.ElevatorConstants.ROTATE_SPEED, direction);
+    elevator.extend(speed, direction);
   }
 
   // Called once the command ends or is interrupted.

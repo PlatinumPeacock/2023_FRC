@@ -28,7 +28,7 @@ public class AutoPneumatics extends CommandBase{
     public void execute() {
         timer.reset();
         timer.start();
-        while(timer.get() < 2) {
+        while(timer.get() < 1.5) {
             pneumatics.setSolenoid(on);
         }
 

@@ -4,12 +4,12 @@ import java.lang.System;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Elevator;
 
-public class ElevConeTop extends CommandBase {
+public class ElevConeBottom extends CommandBase {
     Elevator elevator;
     double heightPoint;
 
   /** Creates a new Extend. */
-  public ElevConeTop(Elevator e, int h) {
+  public ElevConeBottom(Elevator e, int h) {
     elevator = e;
     heightPoint = h;
     addRequirements(elevator);
@@ -23,12 +23,14 @@ public class ElevConeTop extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (elevator.getElevatorPosition() > 360000)//(heightPoint + 5000))
+    if (elevator.getElevatorPosition() > (heightPoint + 5000))
         {elevator.extend(0.6, -1);
-        System.out.println ("up cone top");}
-    else if (elevator.getElevatorPosition() < (358000)) 
+        //System.out.println ("up cone bot");
+      }
+    else if (elevator.getElevatorPosition() < (heightPoint - 5000)) 
         {elevator.extend(0.6, 1);
-        System.out.println ("down cone top");   }
+       // System.out.println ("down cone bot");  
+       }
     else 
         elevator.stop();    
   }

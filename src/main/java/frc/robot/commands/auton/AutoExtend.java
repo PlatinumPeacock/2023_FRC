@@ -29,9 +29,9 @@ public class AutoExtend extends CommandBase {
     timer.reset();
     timer.start();
     while(timer.get() < 4) {
-    if (elevator.getElevatorPosition() > (heightPoint + 5000))
+    if (elevator.getElevatorPosition() > (heightPoint + 4900))
         elevator.extend(0.6, -1);
-    else if (elevator.getElevatorPosition() < (heightPoint - 5000)) 
+    else if (elevator.getElevatorPosition() < (heightPoint - 4800)) 
         elevator.extend(0.6, 1);
     else 
         elevator.stop();    

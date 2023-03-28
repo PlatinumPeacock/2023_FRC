@@ -37,7 +37,7 @@ public final class Constants {
     }
 
     public static final class LimeLightConstants {
-        public static final double AUTO_DRIVE_SPEED = 0.05;
+        public static final double AUTO_DRIVE_SPEED = 0.1;
         public static final double AUTO_ROTATE_SPEED = 0.1;
         public static final double DESIRED_TARGET_AREA = 0.9; // area of the target when the robot reaches desired distance
     }
@@ -84,8 +84,8 @@ public final class Constants {
         public static final double kRearRightAngleZero = 23.54;
 
         //auton driving
-        public static final double AUTON_SPEED = 0.4;
-        public static final double TIME = 1.5; //time robot drives forward in auton :))))
+        public static final double AUTON_SPEED = 0.3;
+        public static final double TIME = 4; //time robot drives forward in auton :))))
     
       }
       

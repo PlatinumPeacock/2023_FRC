@@ -24,8 +24,13 @@ public class Elevator extends SubsystemBase{
   //extend out direction = 1, retract direction = -1
   public void extend(double speed, int direction)
   {
-    System.out.println(getElevatorPosition());
+     if ((getElevatorPosition()<1000) && direction ==-1)
+     {
+      extendMotor.set(ControlMode.PercentOutput, 0 * direction);
+     }
+     else{
     extendMotor.set(ControlMode.PercentOutput, speed * direction);
+     }
   }
 
   public double getElevatorPosition() 

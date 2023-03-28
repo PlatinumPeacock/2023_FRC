@@ -28,6 +28,7 @@ import frc.robot.commands.Intake;
 import frc.robot.commands.Intake_Reverse;
 import frc.robot.commands.Pneumatics;
 import frc.robot.commands.auton.AutonomousOne;
+import frc.robot.commands.auton.MiddleAuton;
 import edu.wpi.first.wpilibj.Compressor;
 
 
@@ -87,15 +88,15 @@ public class RobotContainer {
 
         //new elevator object and all elevator commands
         elevator = new Elevator();
-        extendOut = new RepeatCommand(new Extend(elevator, 1));
+        extendOut = new RepeatCommand(new Extend(elevator, 1, 1));
         extendOut.addRequirements(elevator);
-        extendIn =  new RepeatCommand(new Extend(elevator, -1));
+        extendIn =  new RepeatCommand(new Extend(elevator, -1, 0.5));
         extendIn.addRequirements(elevator);
-        topConeHeight = new RepeatCommand(new ElevConeTop(elevator, 358628));
+        topConeHeight = new RepeatCommand(new ElevConeTop(elevator, 36000));
         topConeHeight.addRequirements(elevator);
-        bottomConeHeight = new RepeatCommand(new ElevConeBottom(elevator, 300000));
+        bottomConeHeight = new RepeatCommand(new ElevConeBottom(elevator, 273000));//was 300000
         bottomConeHeight.addRequirements(elevator);
-        shelfHeight = new RepeatCommand(new ElevShelf(elevator, 280000));
+        shelfHeight = new RepeatCommand(new ElevShelf(elevator, 307000)); //was 301000
         shelfHeight.addRequirements(elevator);
 
         //new claw object and all intake commands
@@ -114,10 +115,12 @@ public class RobotContainer {
         rotateBackward = new Pneumatics(elevatorPneumatics, true);
 
         AutonomousOne autonOne = new AutonomousOne(elevatorPneumatics, elevator, clawPneumatics, swerveDrive);
+        MiddleAuton middleAuton = new MiddleAuton(elevatorPneumatics, elevator, clawPneumatics);
         
         //Add choices as options here
         //Default option
         chooser.setDefaultOption("Autonomous One", autonOne);
+        chooser.addOption("Middle Autonomous", middleAuton);
  
         //Add choice so smart dashboard
         SmartDashboard.putData("Autonomous", chooser);

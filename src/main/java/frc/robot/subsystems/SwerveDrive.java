@@ -24,7 +24,14 @@ public class SwerveDrive extends SubsystemBase {
     private double bR0;
     private double bL0;
     private double rotation;
-
+    private double frontRightSpeed;
+    private double frontLeftSpeed;
+    private double backRightSpeed;
+    private double backLeftSpeed;
+    private double frontRightAngle;
+    private double frontLeftAngle;
+    private double backRightAngle;
+    private double backLeftAngle;
 
     public SwerveDrive (WheelDrive backRight, WheelDrive backLeft, WheelDrive frontRight, WheelDrive frontLeft, WPI_Pigeon2 pigeon2, LimeLight l) {
         this.backRight = backRight;
@@ -41,34 +48,79 @@ public class SwerveDrive extends SubsystemBase {
     }
 
     public void drive () {
+        int yawOffset = 90;
+
+        double theta = pigeon2.getYaw() + yawOffset;
+        
+
         XboxController driver = RobotContainer.driverController;
         boolean adjustToTapeButton = driver.getAButton();
-        boolean adjustToApriltagButton = driver.getBButton();
+        boolean adjustToApriltagRightButton = driver.getBButton();
+        boolean adjustToApriltagLeftButton = driver.getXButton();
 
         //use camera to adjust to a target when A or B are held on driver controller
         if (adjustToTapeButton) {
             limeLight.adjustToTarget(0);
             
             rotation = limeLight.getRotation();
+            theta = Math.asin(Math.sin(theta*Math.PI/180))*180/Math.PI;
+            if (theta < 5 && theta >-175) {
+                x1=0;
+                y1=0;
+                x2 =0;
+            }
+            else if (theta < 175) { 
+                x1 = 0;
+                y1 = 0;
+                x2 = 1;
+            }
+        else if (theta> -5){
+                x1 = 0;
+                y1 = 0;
+                x2 = -1;
+            }
+        else {
             x1 = 0;
             y1 = 0;
             x2 = 0;
         }
-        if (adjustToApriltagButton) {
+        }
+        if (adjustToApriltagRightButton || adjustToApriltagLeftButton) {
             limeLight.adjustToTarget(1);
              {
                 rotation = limeLight.getRotation();
             }
             rotation = limeLight.getRotation();
+
+            theta = Math.asin(Math.sin(theta*Math.PI/180))*180/Math.PI;
+            if (theta < 5 && theta >-5) {
+                x1=0;
+                y1=0;
+                x2 =0;
+            }
+            else if (theta < 5) { 
+                x1 = 0;
+                y1 = 0;
+                x2 = 1;
+            }
+        else if (theta> -5){
+                x1 = 0;
+                y1 = 0;
+                x2 = -1;
+            }
+        else {
             x1 = 0;
             y1 = 0;
             x2 = 0;
+        }
         }
         else {
         x1 = driver.getRawAxis(Constants.ControllerConstants.LEFT_X_AXIS);
         y1 = driver.getRawAxis(Constants.ControllerConstants.LEFT_Y_AXIS);
         x2 = driver.getRawAxis(Constants.ControllerConstants.RIGHT_X_AXIS);
         }
+
+        if ((!adjustToTapeButton && !adjustToApriltagRightButton && !adjustToApriltagLeftButton) || x2 == 1 || x2 ==-1) {
 
         if (x1 < 0.05 && x1 > -0.05) {
             x1 = 0;
@@ -85,9 +137,6 @@ public class SwerveDrive extends SubsystemBase {
         //y1 *= -1;
         //x2 *= -1;
 
-        int yawOffset = 90;
-
-        double theta = pigeon2.getYaw() + yawOffset;
         theta = theta*Math.PI/180;
 
         double temp = y1 * Math.cos(theta) + x1 * Math.sin(theta);
@@ -99,27 +148,32 @@ public class SwerveDrive extends SubsystemBase {
         double c = y1 - x2 * (Constants.DriveConstants.W / r);
         double d = y1 + x2 * (Constants.DriveConstants.W / r);
 
-        double frontRightSpeed = Math.sqrt ((a * a) + (c * c));
-        double backLeftSpeed = Math.sqrt ((a * a) + (d * d));
-        double backRightSpeed = Math.sqrt ((b * b) + (c * c));
-        double frontLeftSpeed = Math.sqrt ((b * b) + (d * d));
+        frontRightSpeed = Math.sqrt ((a * a) + (c * c));
+        backLeftSpeed = Math.sqrt ((a * a) + (d * d));
+        backRightSpeed = Math.sqrt ((b * b) + (c * c));
+        frontLeftSpeed = Math.sqrt ((b * b) + (d * d));
 
-        double frontRightAngle = Math.atan2 (a, c) * 180/ Math.PI ; //arctan(+1) = 45 -45
-        double backLeftAngle = Math.atan2 (a, d) * 180/ Math.PI; //arctan(-1) = -45 45
-        double backRightAngle = Math.atan2 (b, c) * 180/ Math.PI; //arctan(+1) = 45 135
-        double frontLeftAngle = Math.atan2 (b, d) * 180/ Math.PI; //arctan(-1) = -45 -135
+        frontRightAngle = Math.atan2 (a, c) * 180/ Math.PI ; //arctan(+1) = 45 -45
+        backLeftAngle = Math.atan2 (a, d) * 180/ Math.PI; //arctan(-1) = -45 45
+        backRightAngle = Math.atan2 (b, c) * 180/ Math.PI; //arctan(+1) = 45 135
+        frontLeftAngle = Math.atan2 (b, d) * 180/ Math.PI; //arctan(-1) = -45 -135
+
+        }
 
         //set speed to be slower when it is adjusting to a target
-        if (adjustToTapeButton || adjustToApriltagButton) {
+        
+        else {
             if (rotation == 0)
             frontRightSpeed = 0;
             else
             frontRightSpeed = -Constants.LimeLightConstants.AUTO_DRIVE_SPEED;
 
+            
             frontRightAngle = rotation;
             frontLeftAngle = rotation;
             backRightAngle = rotation;
             backLeftAngle = rotation;
+
         }
 
         
@@ -131,10 +185,26 @@ public class SwerveDrive extends SubsystemBase {
             bR0 = backRightAngle;
             bL0 = backLeftAngle;
             //set all speeds the same but different angles
-            frontRight.drive (frontRightSpeed, frontRightAngle);
-            frontLeft.drive (frontRightSpeed, backLeftAngle);
-            backRight.drive (frontRightSpeed, backRightAngle);
-            backLeft.drive (frontRightSpeed, frontLeftAngle);
+            if (adjustToTapeButton || adjustToApriltagRightButton || adjustToApriltagLeftButton) {
+                frontRight.drive (frontRightSpeed, frontRightAngle);
+                frontLeft.drive (frontRightSpeed, backLeftAngle);
+                backRight.drive (frontRightSpeed,  backRightAngle);
+                backLeft.drive (frontRightSpeed, frontLeftAngle);
+            }
+            else {
+                if (driver.getRightBumper()) {
+                    frontRight.drive (frontRightSpeed * 0.5, frontRightAngle);
+                frontLeft.drive (frontRightSpeed * 0.5, backLeftAngle);
+                backRight.drive (frontRightSpeed * 0.5, backRightAngle);
+                backLeft.drive (frontRightSpeed * 0.5, frontLeftAngle);
+                }
+                else {
+                frontRight.drive (frontRightSpeed, frontRightAngle);
+                frontLeft.drive (frontRightSpeed, backLeftAngle);
+                backRight.drive (frontRightSpeed, backRightAngle);
+                backLeft.drive (frontRightSpeed, frontLeftAngle);
+            }
+            }
         }
         else {
             //if the joysticks are at zero, set angle motors to the previous angles instead of returning to zero2
