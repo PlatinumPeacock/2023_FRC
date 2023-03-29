@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
 import frc.robot.Constants;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
@@ -57,8 +56,10 @@ public class SwerveDrive extends SubsystemBase {
         boolean adjustToTapeButton = driver.getAButton();
         boolean adjustToApriltagRightButton = driver.getBButton();
         boolean adjustToApriltagLeftButton = driver.getXButton();
+        boolean stay45 = driver.getLeftBumper();
+        boolean halfSpeed = driver.getRightBumper();
 
-        //use camera to adjust to a target when A or B are held on driver controller
+        //use camera to adjust to a target when A, B, or X are held on driver controller
         if (adjustToTapeButton) {
             limeLight.adjustToTarget(0);
             
@@ -74,22 +75,19 @@ public class SwerveDrive extends SubsystemBase {
                 y1 = 0;
                 x2 = 1;
             }
-        else if (theta> -5){
+            else if (theta > -5) {
                 x1 = 0;
                 y1 = 0;
                 x2 = -1;
             }
-        else {
-            x1 = 0;
-            y1 = 0;
-            x2 = 0;
-        }
-        }
-        if (adjustToApriltagRightButton || adjustToApriltagLeftButton) {
-            limeLight.adjustToTarget(1);
-             {
-                rotation = limeLight.getRotation();
+            else {
+                x1 = 0;
+                y1 = 0;
+                x2 = 0;
             }
+        }
+        else if (adjustToApriltagRightButton || adjustToApriltagLeftButton) {
+            limeLight.adjustToTarget(1);
             rotation = limeLight.getRotation();
 
             theta = Math.asin(Math.sin(theta*Math.PI/180))*180/Math.PI;
@@ -103,34 +101,34 @@ public class SwerveDrive extends SubsystemBase {
                 y1 = 0;
                 x2 = 1;
             }
-        else if (theta> -5){
+            else if (theta > -5){
                 x1 = 0;
                 y1 = 0;
                 x2 = -1;
             }
-        else {
-            x1 = 0;
-            y1 = 0;
-            x2 = 0;
+            else {
+                x1 = 0;
+                y1 = 0;
+                x2 = 0;
+            }
         }
-        }
         else {
-        x1 = driver.getRawAxis(Constants.ControllerConstants.LEFT_X_AXIS);
-        y1 = driver.getRawAxis(Constants.ControllerConstants.LEFT_Y_AXIS);
-        x2 = driver.getRawAxis(Constants.ControllerConstants.RIGHT_X_AXIS);
+            x1 = driver.getRawAxis(Constants.ControllerConstants.LEFT_X_AXIS);
+            y1 = driver.getRawAxis(Constants.ControllerConstants.LEFT_Y_AXIS);
+            x2 = driver.getRawAxis(Constants.ControllerConstants.RIGHT_X_AXIS);
         }
 
         if ((!adjustToTapeButton && !adjustToApriltagRightButton && !adjustToApriltagLeftButton) || x2 == 1 || x2 ==-1) {
 
-        if (x1 < 0.05 && x1 > -0.05) {
-            x1 = 0;
-        }
-        if (x2 < 0.05 && x2 > -0.05) {
-            x2 = 0;
-        }
-        if (y1 < 0.05 && y1 > -0.05) {
-            y1 = 0;
-        }
+            if (x1 < 0.05 && x1 > -0.05) {
+                x1 = 0;
+            }
+            if (x2 < 0.05 && x2 > -0.05) {
+                x2 = 0;
+            }
+            if (y1 < 0.05 && y1 > -0.05) {
+                y1 = 0;
+            }
 
        
         double r = Math.sqrt((Constants.DriveConstants.L * Constants.DriveConstants.L) + (Constants.DriveConstants.W * Constants.DriveConstants.W));
@@ -164,9 +162,9 @@ public class SwerveDrive extends SubsystemBase {
         
         else {
             if (rotation == 0)
-            frontRightSpeed = 0;
+                frontRightSpeed = 0;
             else
-            frontRightSpeed = -Constants.LimeLightConstants.AUTO_DRIVE_SPEED;
+                frontRightSpeed = -Constants.LimeLightConstants.AUTO_DRIVE_SPEED;
 
             
             frontRightAngle = rotation;
@@ -178,32 +176,27 @@ public class SwerveDrive extends SubsystemBase {
 
         
 
-        if (frontRightAngle != 0) {
+        if (frontRightAngle != 0 || stay45) {
             //save the current angles so that the wheels do not return to zero when the joysticks are at zero
             fR0 = frontRightAngle;
             fL0 = frontLeftAngle;
             bR0 = backRightAngle;
             bL0 = backLeftAngle;
-            //set all speeds the same but different angles
-            if (adjustToTapeButton || adjustToApriltagRightButton || adjustToApriltagLeftButton) {
-                frontRight.drive (frontRightSpeed, frontRightAngle);
-                frontLeft.drive (frontRightSpeed, backLeftAngle);
-                backRight.drive (frontRightSpeed,  backRightAngle);
-                backLeft.drive (frontRightSpeed, frontLeftAngle);
-            }
-            else {
-                if (driver.getRightBumper()) {
-                    frontRight.drive (frontRightSpeed * 0.5, frontRightAngle);
+            
+            if (halfSpeed) {
+                frontRight.drive (frontRightSpeed * 0.5, frontRightAngle);
                 frontLeft.drive (frontRightSpeed * 0.5, backLeftAngle);
                 backRight.drive (frontRightSpeed * 0.5, backRightAngle);
                 backLeft.drive (frontRightSpeed * 0.5, frontLeftAngle);
-                }
-                else {
+            }
+            else if (stay45)
+                hold45();
+            else {
+                //set all speeds the same but different angles
                 frontRight.drive (frontRightSpeed, frontRightAngle);
                 frontLeft.drive (frontRightSpeed, backLeftAngle);
                 backRight.drive (frontRightSpeed, backRightAngle);
                 backLeft.drive (frontRightSpeed, frontLeftAngle);
-            }
             }
         }
         else {
@@ -222,6 +215,13 @@ public class SwerveDrive extends SubsystemBase {
         frontLeft.drive (-Constants.DriveConstants.AUTON_SPEED, 0);
         backRight.drive (-Constants.DriveConstants.AUTON_SPEED, 0);
         backLeft.drive (-Constants.DriveConstants.AUTON_SPEED, 0);
+    }
+
+    public void hold45() {
+        frontRight.drive (0, 45);
+        frontLeft.drive (0, 45);
+        backRight.drive (0, 45);
+        backLeft.drive (0, 45);
     }
 
     public void stop()

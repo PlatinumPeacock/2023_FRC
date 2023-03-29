@@ -7,7 +7,7 @@ import frc.robot.subsystems.Solenoids;
 import frc.robot.subsystems.SwerveDrive;
 
 
-
+//use this auton for inside or outside starting positions
 
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more

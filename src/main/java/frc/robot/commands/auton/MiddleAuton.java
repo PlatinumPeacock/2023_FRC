@@ -5,7 +5,7 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Solenoids;
 
 
-
+//use this auton when starting in the middle
 
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more

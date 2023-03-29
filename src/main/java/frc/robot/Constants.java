@@ -16,6 +16,8 @@ public final class Constants {
         //elevator motor speeds
         public static final double ROTATE_SPEED = 1;
         public static final double EXTEND_SPEED = 0.25;
+        public static final int SHELF_HEIGHT = 618000;
+        public static final int MIDDLE_HEIGHT = 546000;
     }
 
     public static final class ClawConstants {
@@ -85,7 +87,7 @@ public final class Constants {
 
         //auton driving
         public static final double AUTON_SPEED = 0.3;
-        public static final double TIME = 4; //time robot drives forward in auton :))))
+        public static final double TIME = 4; //time robot drives forward in auton
     
       }
       

@@ -1,15 +1,14 @@
 package frc.robot.commands;
 
-import java.lang.System;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Elevator;
 
-public class ElevConeBottom extends CommandBase {
+public class ElevSetHeight extends CommandBase {
     Elevator elevator;
     double heightPoint;
 
   /** Creates a new Extend. */
-  public ElevConeBottom(Elevator e, int h) {
+  public ElevSetHeight(Elevator e, int h) {
     elevator = e;
     heightPoint = h;
     addRequirements(elevator);
@@ -23,13 +22,11 @@ public class ElevConeBottom extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (elevator.getElevatorPosition() > (heightPoint + 5000))
+    if (elevator.getElevatorPosition() > (heightPoint + 15000))
         {elevator.extend(0.6, -1);
-        //System.out.println ("up cone bot");
       }
-    else if (elevator.getElevatorPosition() < (heightPoint - 5000)) 
+    else if (elevator.getElevatorPosition() < (heightPoint - 15000)) 
         {elevator.extend(0.6, 1);
-       // System.out.println ("down cone bot");  
        }
     else 
         elevator.stop();    

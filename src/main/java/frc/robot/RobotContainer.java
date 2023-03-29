@@ -2,16 +2,13 @@ package frc.robot;
 
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Elevator;
@@ -20,9 +17,7 @@ import frc.robot.subsystems.SwerveDrive;
 import frc.robot.subsystems.WheelDrive;
 import frc.robot.subsystems.Solenoids;
 import frc.robot.commands.DriveWithJoysticksTrial;
-import frc.robot.commands.ElevConeBottom;
-import frc.robot.commands.ElevConeTop;
-import frc.robot.commands.ElevShelf;
+import frc.robot.commands.ElevSetHeight;
 import frc.robot.commands.Extend;
 import frc.robot.commands.Intake;
 import frc.robot.commands.Intake_Reverse;
@@ -62,7 +57,7 @@ public class RobotContainer {
     private final RepeatCommand extendOut;
     private final RepeatCommand extendIn;
     private final RepeatCommand topConeHeight;
-    private final RepeatCommand bottomConeHeight;
+    private final RepeatCommand middleConeHeight;
     private final RepeatCommand shelfHeight;
     private final RepeatCommand intake;
     private final RepeatCommand intakeReverse;
@@ -90,13 +85,13 @@ public class RobotContainer {
         elevator = new Elevator();
         extendOut = new RepeatCommand(new Extend(elevator, 1, 1));
         extendOut.addRequirements(elevator);
-        extendIn =  new RepeatCommand(new Extend(elevator, -1, 0.5));
+        extendIn =  new RepeatCommand(new Extend(elevator, -1, 0.7)); //speed previously was 0.5
         extendIn.addRequirements(elevator);
-        topConeHeight = new RepeatCommand(new ElevConeTop(elevator, 36000));
+        topConeHeight = new RepeatCommand(new ElevSetHeight(elevator, 306000));
         topConeHeight.addRequirements(elevator);
-        bottomConeHeight = new RepeatCommand(new ElevConeBottom(elevator, 273000));//was 300000
-        bottomConeHeight.addRequirements(elevator);
-        shelfHeight = new RepeatCommand(new ElevShelf(elevator, 307000)); //was 301000
+        middleConeHeight = new RepeatCommand(new ElevSetHeight(elevator, Constants.ElevatorConstants.MIDDLE_HEIGHT));//was 300000
+        middleConeHeight.addRequirements(elevator);
+        shelfHeight = new RepeatCommand(new ElevSetHeight(elevator, Constants.ElevatorConstants.SHELF_HEIGHT)); //was 301000
         shelfHeight.addRequirements(elevator);
 
         //new claw object and all intake commands
@@ -122,7 +117,7 @@ public class RobotContainer {
         chooser.setDefaultOption("Autonomous One", autonOne);
         chooser.addOption("Middle Autonomous", middleAuton);
  
-        //Add choice so smart dashboard
+        //Add choice to smart dashboard
         SmartDashboard.putData("Autonomous", chooser);
 
 
@@ -162,8 +157,8 @@ public class RobotContainer {
         Trigger topConeButton = operatorController.povUp();
         topConeButton.whileTrue(topConeHeight);
 
-        Trigger bottomConeButton = operatorController.povDown();
-        bottomConeButton.whileTrue(bottomConeHeight);
+        Trigger middleConeButton = operatorController.povDown();
+        middleConeButton.whileTrue(middleConeHeight);
 
         Trigger shelfButton = operatorController.povLeft();
         shelfButton.whileTrue(shelfHeight);
