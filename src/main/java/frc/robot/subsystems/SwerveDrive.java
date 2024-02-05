@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import frc.robot.Constants;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.RobotContainer;
 
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
@@ -31,6 +32,7 @@ public class SwerveDrive extends SubsystemBase {
     private double frontLeftAngle;
     private double backRightAngle;
     private double backLeftAngle;
+    private double theta;
 
     public SwerveDrive (WheelDrive backRight, WheelDrive backLeft, WheelDrive frontRight, WheelDrive frontLeft, WPI_Pigeon2 pigeon2, LimeLight l) {
         this.backRight = backRight;
@@ -43,21 +45,27 @@ public class SwerveDrive extends SubsystemBase {
         fL0 = 0;
         bR0 = 0;
         bL0 = 0;
-
     }
 
     public void drive () {
-        int yawOffset = 90;
-
-        double theta = pigeon2.getYaw() + yawOffset;
         
-
         XboxController driver = RobotContainer.driverController;
         boolean adjustToTapeButton = driver.getAButton();
         boolean adjustToApriltagRightButton = driver.getBButton();
         boolean adjustToApriltagLeftButton = driver.getXButton();
         boolean stay45 = driver.getLeftBumper();
         boolean halfSpeed = driver.getRightBumper();
+        boolean setThetaZeroButton = driver.getYButton();
+
+        
+        if (setThetaZeroButton) {
+            setThetaZero();
+        }
+        else {            
+        theta = pigeon2.getYaw() + Constants.DriveConstants.yawOffset;
+        }
+            
+            
 
         //use camera to adjust to a target when A, B, or X are held on driver controller
         if (adjustToTapeButton) {
@@ -123,7 +131,7 @@ public class SwerveDrive extends SubsystemBase {
             if (x1 < 0.05 && x1 > -0.05) {
                 x1 = 0;
             }
-            if (x2 < 0.05 && x2 > -0.05) {
+            if (x2 < 0.1 && x2 > -0.1) {
                 x2 = 0;
             }
             if (y1 < 0.05 && y1 > -0.05) {
@@ -146,10 +154,10 @@ public class SwerveDrive extends SubsystemBase {
         double c = y1 - x2 * (Constants.DriveConstants.W / r);
         double d = y1 + x2 * (Constants.DriveConstants.W / r);
 
-        frontRightSpeed = Math.sqrt ((a * a) + (c * c));
-        backLeftSpeed = Math.sqrt ((a * a) + (d * d));
-        backRightSpeed = Math.sqrt ((b * b) + (c * c));
-        frontLeftSpeed = Math.sqrt ((b * b) + (d * d));
+        frontRightSpeed = 0.5 * Math.sqrt ((a * a) + (c * c));
+        backLeftSpeed = 0.5 * Math.sqrt ((a * a) + (d * d));
+        backRightSpeed = 0.5 * Math.sqrt ((b * b) + (c * c));
+        frontLeftSpeed = 0.5 * Math.sqrt ((b * b) + (d * d));
 
         frontRightAngle = Math.atan2 (a, c) * 180/ Math.PI ; //arctan(+1) = 45 -45
         backLeftAngle = Math.atan2 (a, d) * 180/ Math.PI; //arctan(-1) = -45 45
@@ -184,14 +192,21 @@ public class SwerveDrive extends SubsystemBase {
             bL0 = backLeftAngle;
             
             if (halfSpeed) {
-                frontRight.drive (frontRightSpeed * 0.5, frontRightAngle);
-                frontLeft.drive (frontRightSpeed * 0.5, backLeftAngle);
-                backRight.drive (frontRightSpeed * 0.5, backRightAngle);
-                backLeft.drive (frontRightSpeed * 0.5, frontLeftAngle);
+                frontRight.drive (frontRightSpeed * 0.4, frontRightAngle);
+                frontLeft.drive (frontRightSpeed * 0.4, backLeftAngle);
+                backRight.drive (frontRightSpeed * 0.4, backRightAngle);
+                backLeft.drive (frontRightSpeed * 0.4, frontLeftAngle);
             }
             else if (stay45)
                 hold45();
             else {
+                /* // attempt to fix drifting after first competition
+                frontRight.drive (frontRightSpeed, frontRightAngle);
+                frontLeft.drive (frontLeftSpeed, backLeftAngle);
+                backRight.drive (backRightSpeed, backRightAngle);
+                backLeft.drive (backLeftSpeed, frontLeftAngle);
+                */
+            
                 //set all speeds the same but different angles
                 frontRight.drive (frontRightSpeed, frontRightAngle);
                 frontLeft.drive (frontRightSpeed, backLeftAngle);
@@ -201,13 +216,17 @@ public class SwerveDrive extends SubsystemBase {
         }
         else {
             //if the joysticks are at zero, set angle motors to the previous angles instead of returning to zero2
-            frontRight.drive (frontRightSpeed, fR0);
-            frontLeft.drive (frontRightSpeed, bL0);
-            backRight.drive (frontRightSpeed, bR0);
-            backLeft.drive (frontRightSpeed, fL0);
+            frontRight.drive (frontLeftSpeed, fR0);
+            frontLeft.drive (frontLeftSpeed, bL0);
+            backRight.drive (frontLeftSpeed, bR0);
+            backLeft.drive (frontLeftSpeed, fL0);
         }
     
     
+    }
+
+    public void setThetaZero() {
+        theta = 0;
     }
 
     public void driveForward() {
@@ -217,11 +236,19 @@ public class SwerveDrive extends SubsystemBase {
         backLeft.drive (-Constants.DriveConstants.AUTON_SPEED, 0);
     }
 
+    //direction = 1 for forward, -1 for backward
+    public void driveForward(double speed, int direction) {
+        frontRight.drive (-speed * direction, 0);
+        frontLeft.drive (-speed * direction, 0);
+        backRight.drive (-speed * direction, 0);
+        backLeft.drive (-speed * direction, 0);
+    }
+
     public void hold45() {
-        frontRight.drive (0, 45);
+        frontRight.drive (0, -45);
         frontLeft.drive (0, 45);
-        backRight.drive (0, 45);
-        backLeft.drive (0, 45);
+        backRight.drive (0, -135);
+        backLeft.drive (0, 135);
     }
 
     public void stop()

@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Elevator;
@@ -17,13 +18,20 @@ import frc.robot.subsystems.SwerveDrive;
 import frc.robot.subsystems.WheelDrive;
 import frc.robot.subsystems.Solenoids;
 import frc.robot.commands.DriveWithJoysticksTrial;
+import frc.robot.commands.ElevDown;
 import frc.robot.commands.ElevSetHeight;
 import frc.robot.commands.Extend;
 import frc.robot.commands.Intake;
 import frc.robot.commands.Intake_Reverse;
 import frc.robot.commands.Pneumatics;
 import frc.robot.commands.auton.AutonomousOne;
-import frc.robot.commands.auton.MiddleAuton;
+import frc.robot.commands.auton.HighConeAuton;
+import frc.robot.commands.auton.HighConeBalanceAuton;
+import frc.robot.commands.auton.HighCubeAuton;
+import frc.robot.commands.auton.HighCubeBalanceAuton;
+import frc.robot.commands.auton.StillHighConeAuton;
+import frc.robot.commands.auton.StillHighCubeAuton;
+import frc.robot.commands.auton.StillMidConeAuton;
 import edu.wpi.first.wpilibj.Compressor;
 
 
@@ -40,6 +48,8 @@ public class RobotContainer {
     public static final WheelDrive frontLeft = new WheelDrive (Constants.DriveConstants.FRONT_LEFT_TURNING, Constants.DriveConstants.FRONT_LEFT_DRIVE, Constants.DriveConstants.FRONT_LEFT_ENCODER);
 
     public static final WPI_Pigeon2 pigeon2 = new WPI_Pigeon2(Constants.DriveConstants.PIGEON2);
+    
+    
 
     //create LimeLight
     public static final LimeLight limeLight = new LimeLight();
@@ -61,6 +71,7 @@ public class RobotContainer {
     private final RepeatCommand shelfHeight;
     private final RepeatCommand intake;
     private final RepeatCommand intakeReverse;
+    private final RepeatCommand elevDown;
 
     //create all pneumatics commands
     private final Pneumatics cube;
@@ -93,6 +104,8 @@ public class RobotContainer {
         middleConeHeight.addRequirements(elevator);
         shelfHeight = new RepeatCommand(new ElevSetHeight(elevator, Constants.ElevatorConstants.SHELF_HEIGHT)); //was 301000
         shelfHeight.addRequirements(elevator);
+        elevDown = new RepeatCommand(new ElevDown(elevator));
+        elevDown.addRequirements(elevator);
 
         //new claw object and all intake commands
         claw = new Claw();
@@ -110,12 +123,25 @@ public class RobotContainer {
         rotateBackward = new Pneumatics(elevatorPneumatics, true);
 
         AutonomousOne autonOne = new AutonomousOne(elevatorPneumatics, elevator, clawPneumatics, swerveDrive);
-        MiddleAuton middleAuton = new MiddleAuton(elevatorPneumatics, elevator, clawPneumatics);
+        StillMidConeAuton stillMidConeAuton = new StillMidConeAuton(elevatorPneumatics, elevator, clawPneumatics);
+        StillHighConeAuton stillHighConeAuton = new StillHighConeAuton(elevatorPneumatics, elevator, clawPneumatics);
+        StillHighCubeAuton stillHighCubeAuton = new StillHighCubeAuton(elevatorPneumatics, elevator, claw, swerveDrive);
+        HighConeAuton highConeAuton = new HighConeAuton(elevatorPneumatics, elevator, clawPneumatics, swerveDrive);
+        HighCubeAuton highCubeAuton = new HighCubeAuton(elevatorPneumatics, elevator, claw, swerveDrive);
+        HighCubeBalanceAuton highCubeBalanceAuton = new HighCubeBalanceAuton(elevatorPneumatics, elevator, claw, swerveDrive);
+        HighConeBalanceAuton highConeBalanceAuton = new HighConeBalanceAuton(elevatorPneumatics, elevator, claw, swerveDrive, clawPneumatics);
+
         
         //Add choices as options here
         //Default option
-        chooser.setDefaultOption("Autonomous One", autonOne);
-        chooser.addOption("Middle Autonomous", middleAuton);
+        chooser.setDefaultOption("Autonomous One (middle cone)", autonOne);
+        chooser.addOption("Stationary Mid Cone Auton", stillMidConeAuton);
+        chooser.addOption("Stationary High Cone Auton", stillHighConeAuton);
+        chooser.addOption("Stationary High Cube Auton", stillHighCubeAuton);
+        chooser.addOption("High CONE Auton", highConeAuton);
+        chooser.addOption("High CUBE Auton", highCubeAuton);
+        chooser.addOption("High Cube + Balance", highCubeBalanceAuton);
+        chooser.addOption("High Cone + Balance", highConeBalanceAuton);
  
         //Add choice to smart dashboard
         SmartDashboard.putData("Autonomous", chooser);
@@ -154,14 +180,20 @@ public class RobotContainer {
         Trigger rotateBackwardButton = operatorController.leftBumper();
         rotateBackwardButton.whileTrue(rotateBackward);
 
-        Trigger topConeButton = operatorController.povUp();
-        topConeButton.whileTrue(topConeHeight);
 
-        Trigger middleConeButton = operatorController.povDown();
+        //elevator height buttons
+        Trigger topConeButton = operatorController.povUp();
+        topConeButton.whileTrue(extendOut);
+
+        Trigger middleConeButton = operatorController.povRight();
         middleConeButton.whileTrue(middleConeHeight);
 
         Trigger shelfButton = operatorController.povLeft();
         shelfButton.whileTrue(shelfHeight);
+
+        Trigger elevDownButton = operatorController.povDown();
+        elevDownButton.whileTrue(elevDown);
+
     }
 
     public void teleopInitFunc() {

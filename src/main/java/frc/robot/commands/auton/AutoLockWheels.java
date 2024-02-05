@@ -4,22 +4,18 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SwerveDrive;
 
-public class AutonDrive extends CommandBase{
+public class AutoLockWheels extends CommandBase{
     SwerveDrive driveTrain;
     double time;
-    double speed;
-    int direction;
     private boolean finish = false;
     Timer timer;
 
     /** Creates a new AutonDrive. */
-    public AutonDrive(SwerveDrive dt, double t, double s, int d) {
+    public AutoLockWheels(SwerveDrive dt, double t) {
     driveTrain = dt;
     addRequirements(driveTrain);
     time = t;
     timer = new Timer();
-    speed = s;
-    direction = d;
     }
 
   // Called when the command is initially scheduled.
@@ -28,13 +24,13 @@ public class AutonDrive extends CommandBase{
   public void initialize() {
     timer.reset();
     timer.start();
-    while(timer.get() < 0.5)
+    while(timer.get() < 0.2)
     {
       driveTrain.stop();
     }
     while(timer.get() < time)
     {
-      driveTrain.driveForward(speed, direction);
+      driveTrain.hold45();
     }
     finish = true;
   }

@@ -1,5 +1,7 @@
 package frc.robot;
 
+import com.ctre.phoenix.sensors.WPI_Pigeon2;
+
 public final class Constants {
 
     public static final class ControllerConstants {
@@ -16,8 +18,9 @@ public final class Constants {
         //elevator motor speeds
         public static final double ROTATE_SPEED = 1;
         public static final double EXTEND_SPEED = 0.25;
-        public static final int SHELF_HEIGHT = 618000;
+        public static final int SHELF_HEIGHT = 610000;
         public static final int MIDDLE_HEIGHT = 546000;
+        public static final double elevatorTicksToInches = 14210.05;
     }
 
     public static final class ClawConstants {
@@ -52,7 +55,8 @@ public final class Constants {
         public static final double L = 0.56515; //length between axles // Distance between front and back wheels on robot
         public static final double W = 0.56515; //width between axles // Distance between centers of right and left wheels on robot
         public static final int PIGEON_ID = 2;
-        public static final double MAX_VOLTS = 8;   
+        public static final double MAX_VOLTS = 8;  
+        public static final int yawOffset = 90; 
 
         // Angular offsets of the modules relative to the chassis in radians
         /* 
@@ -79,12 +83,12 @@ public final class Constants {
         public static final int REAR_RIGHT_ENCODER = 3;
 
         public static final int PIGEON2 = 2;
-    
-        public static final double kFrontLeftAngleZero = 79.45;
-        public static final double kRearLeftAngleZero = 121.38;
-        public static final double kFrontRightAngleZero = -104.68;
-        public static final double kRearRightAngleZero = 23.54;
-
+    /*NOT USED
+        public static final double kFrontLeftAngleZero = 73.828;//79.45;
+        public static final double kRearLeftAngleZero = -92.75;//121.38;
+        public static final double kFrontRightAngleZero = 160;//104.15;//-104.68;
+        public static final double kRearRightAngleZero = -88.945;//23.54;
+*/
         //auton driving
         public static final double AUTON_SPEED = 0.3;
         public static final double TIME = 4; //time robot drives forward in auton
